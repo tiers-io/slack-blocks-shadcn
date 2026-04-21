@@ -39,7 +39,28 @@ import { ButtonElement, type ButtonElementData } from "./elements/button";
 import { WorkflowButtonElement, type WorkflowButtonElementData } from "./elements/workflow_button";
 import { IconButtonElement, type IconButtonElementData } from "./elements/icon_button";
 import { FeedbackButtonsElement, type FeedbackButtonsElementData } from "./elements/feedback_buttons";
-import { SelectElement, type SelectElementData } from "./elements/select";
+import {
+  StaticSelectElement,
+  MultiStaticSelectElement,
+  UsersSelectElement,
+  MultiUsersSelectElement,
+  ChannelsSelectElement,
+  MultiChannelsSelectElement,
+  ConversationsSelectElement,
+  MultiConversationsSelectElement,
+  ExternalSelectElement,
+  MultiExternalSelectElement,
+  type StaticSelectData,
+  type MultiStaticSelectData,
+  type UsersSelectData,
+  type MultiUsersSelectData,
+  type ChannelsSelectData,
+  type MultiChannelsSelectData,
+  type ConversationsSelectData,
+  type MultiConversationsSelectData,
+  type ExternalSelectData,
+  type MultiExternalSelectData,
+} from "./elements/select";
 import { ImageElementView } from "./elements/image_element";
 import type { ImageElement } from "./types";
 import {
@@ -91,7 +112,16 @@ export interface ComponentOverrides {
   WorkflowButtonElement: ComponentType<{ element: WorkflowButtonElementData }>;
   IconButtonElement: ComponentType<{ element: IconButtonElementData }>;
   FeedbackButtonsElement: ComponentType<{ element: FeedbackButtonsElementData }>;
-  SelectElement: ComponentType<{ element: SelectElementData }>;
+  StaticSelectElement: ComponentType<{ element: StaticSelectData }>;
+  MultiStaticSelectElement: ComponentType<{ element: MultiStaticSelectData }>;
+  UsersSelectElement: ComponentType<{ element: UsersSelectData }>;
+  MultiUsersSelectElement: ComponentType<{ element: MultiUsersSelectData }>;
+  ChannelsSelectElement: ComponentType<{ element: ChannelsSelectData }>;
+  MultiChannelsSelectElement: ComponentType<{ element: MultiChannelsSelectData }>;
+  ConversationsSelectElement: ComponentType<{ element: ConversationsSelectData }>;
+  MultiConversationsSelectElement: ComponentType<{ element: MultiConversationsSelectData }>;
+  ExternalSelectElement: ComponentType<{ element: ExternalSelectData }>;
+  MultiExternalSelectElement: ComponentType<{ element: MultiExternalSelectData }>;
   ImageElementView: ComponentType<{ element: ImageElement }>;
   PlainTextInput: ComponentType<{ element: PlainTextInputData }>;
   NumberInput: ComponentType<{ element: NumberInputData }>;
@@ -138,7 +168,16 @@ export const DEFAULT_COMPONENTS: ComponentOverrides = {
   WorkflowButtonElement,
   IconButtonElement,
   FeedbackButtonsElement,
-  SelectElement,
+  StaticSelectElement,
+  MultiStaticSelectElement,
+  UsersSelectElement,
+  MultiUsersSelectElement,
+  ChannelsSelectElement,
+  MultiChannelsSelectElement,
+  ConversationsSelectElement,
+  MultiConversationsSelectElement,
+  ExternalSelectElement,
+  MultiExternalSelectElement,
   ImageElementView,
   PlainTextInput,
   NumberInput,
