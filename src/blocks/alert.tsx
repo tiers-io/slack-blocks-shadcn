@@ -1,37 +1,38 @@
-import { AlertCircle, CheckCircle2, Info, TriangleAlert } from "lucide-react";
+import { AlertCircle, Info, Lightbulb, TriangleAlert } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { sizing } from "../sizing";
 import { useSize } from "../context";
 import { cn } from "../utils/cn";
 
-// Slack `alert` blocks carry a level + message. Match shadcn's Alert
-// aesthetic: border + soft background + leading icon.
+// Slack `alert` blocks carry a level + description. Upstream supports
+// `default | info | warning | error` (no `success`). Field names
+// aligned 1:1 with upstream: `level` / `title` / `description`.
 
-export type AlertLevel = "info" | "warning" | "error" | "success";
+export type AlertLevel = "default" | "info" | "warning" | "error";
 
 export interface AlertBlockData {
   type: "alert";
   block_id?: string;
-  alert_level: AlertLevel;
-  message: string;
+  level: AlertLevel;
   title?: string;
+  description?: string;
 }
 
 const MAP: Record<
   AlertLevel,
   { icon: LucideIcon; accent: string; bg: string; border: string }
 > = {
-  info: {
-    icon: Info,
+  default: {
+    icon: Lightbulb,
     accent: "text-foreground",
     bg: "bg-muted/40",
     border: "border-border",
   },
-  success: {
-    icon: CheckCircle2,
-    accent: "text-emerald-600 dark:text-emerald-400",
-    bg: "bg-emerald-500/10",
-    border: "border-emerald-500/30",
+  info: {
+    icon: Info,
+    accent: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/30",
   },
   warning: {
     icon: TriangleAlert,
@@ -49,13 +50,12 @@ const MAP: Record<
 
 export function AlertBlock({ block }: { block: AlertBlockData }) {
   const size = useSize();
-  const { icon: Icon, accent, bg, border } =
-    MAP[block.alert_level] ?? MAP.info;
+  const { icon: Icon, accent, bg, border } = MAP[block.level] ?? MAP.default;
   return (
     <div
       data-block="alert"
-      data-level={block.alert_level}
-      role={block.alert_level === "error" ? "alert" : "status"}
+      data-level={block.level}
+      role={block.level === "error" ? "alert" : "status"}
       className={cn(
         "flex items-start gap-3 rounded-md border",
         bg,
@@ -70,9 +70,11 @@ export function AlertBlock({ block }: { block: AlertBlockData }) {
             {block.title}
           </div>
         ) : null}
-        <div className={cn("text-foreground/90", sizing[size].body)}>
-          {block.message}
-        </div>
+        {block.description ? (
+          <div className={cn("text-foreground/90", sizing[size].body)}>
+            {block.description}
+          </div>
+        ) : null}
       </div>
     </div>
   );

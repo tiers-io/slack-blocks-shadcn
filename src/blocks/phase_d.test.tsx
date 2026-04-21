@@ -102,7 +102,7 @@ describe("Phase D blocks", () => {
   });
 
   describe("alert", () => {
-    it.each(["info", "success", "warning", "error"] as const)(
+    it.each(["default", "info", "warning", "error"] as const)(
       "renders %s level with correct data attributes",
       (level) => {
         render(
@@ -111,8 +111,8 @@ describe("Phase D blocks", () => {
             blocks={[
               {
                 type: "alert",
-                alert_level: level,
-                message: `${level} message`,
+                level,
+                description: `${level} message`,
               },
             ] as Block[]}
           />,
