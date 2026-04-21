@@ -122,7 +122,10 @@ export interface ComponentOverrides {
   MultiConversationsSelectElement: ComponentType<{ element: MultiConversationsSelectData }>;
   ExternalSelectElement: ComponentType<{ element: ExternalSelectData }>;
   MultiExternalSelectElement: ComponentType<{ element: MultiExternalSelectData }>;
-  ImageElementView: ComponentType<{ element: ImageElement }>;
+  ImageElementView: ComponentType<{
+    element: ImageElement;
+    inside?: "context" | "section";
+  }>;
   PlainTextInput: ComponentType<{ element: PlainTextInputData }>;
   NumberInput: ComponentType<{ element: NumberInputData }>;
   EmailInput: ComponentType<{ element: EmailInputData }>;
@@ -218,7 +221,12 @@ export type ActionPayload =
   | { type: "button"; action_id?: string; value?: string }
   | { type: "workflow_button"; action_id: string; url: string }
   | { type: "icon_button"; action_id: string }
-  | { type: "feedback_buttons"; action_id: string; value: "up" | "down" | "agree" | "disagree" | "good" | "bad" }
+  | {
+      type: "feedback_buttons";
+      action_id: string;
+      value: "up" | "down";
+      payload_value?: string;
+    }
   | { type: "static_select"; action_id: string; selected_option: { value: string; text: string } | null }
   | { type: "multi_static_select"; action_id: string; selected_options: { value: string; text: string }[] }
   | { type: "users_select"; action_id: string; selected_user: string | null }
@@ -240,7 +248,11 @@ export type ActionPayload =
   | { type: "email_text_input"; action_id: string; value: string }
   | { type: "url_text_input"; action_id: string; value: string }
   | { type: "rich_text_input"; action_id: string; value: string }
-  | { type: "file_input"; action_id: string; files: File[] };
+  | {
+      type: "file_input";
+      action_id: string;
+      files: { name: string; size: number; type: string }[];
+    };
 
 export type OnActionCallback = (payload: ActionPayload) => void;
 
