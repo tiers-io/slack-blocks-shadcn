@@ -8,6 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@yozora/ast':
+        specifier: ^2.3.16
+        version: 2.3.16
+      '@yozora/character':
+        specifier: ^2.3.16
+        version: 2.3.16
+      '@yozora/core-tokenizer':
+        specifier: ^2.3.16
+        version: 2.3.16
+      '@yozora/parser':
+        specifier: ^2.3.16
+        version: 2.3.16
       node-emoji:
         specifier: ^2.1.3
         version: 2.2.0
@@ -993,6 +1005,120 @@ packages:
 
   '@vitest/utils@3.2.4':
     resolution: {integrity: sha512-fB2V0JFrQSMsCo9HiSq3Ezpdv4iYaXRG1Sx8edX3MwxfyNn83mKiGzOcH+Fkxt4MHxr3y42fQi1oeAInqgX2QA==}
+
+  '@yozora/ast-util@2.3.16':
+    resolution: {integrity: sha512-rsVjagKoWzNxcQUGVX8vTjpeCQh4hOn+ZdS+gz0a0HNKPX2qf96pROJ87OmDM4PIOzEzibhbybvjOUxQDCwH6A==}
+
+  '@yozora/ast@2.3.16':
+    resolution: {integrity: sha512-4vZ6pXtU6Xs/OvB38PdKNSohCH4e7lCDwmzW0oyDaLSqMKc0LFeodlttWwn7fxqkuAezX/YGVei/0/JECQZfvg==}
+
+  '@yozora/character@2.3.16':
+    resolution: {integrity: sha512-nSYwKMHiwHAyozAoKpIkIuSamhUIy/LNALjfVPIzLeHSwX3c7/B5f7wV32Egx7RFfk3mK/SIuWGp9a3v4P3kdw==}
+
+  '@yozora/core-parser@2.3.16':
+    resolution: {integrity: sha512-Suu8SBjY9xxsD6X82zlfMbBY9KQx8gHL9q3jyveSAMhbkyyD4syd73WUpY4NunpW/5zFeRwBWOJFhBHSRzMBnw==}
+
+  '@yozora/core-tokenizer@2.3.16':
+    resolution: {integrity: sha512-ob/ETWNM3SJwejFSFAOuBvhPlA+aCRUQqMoOff0oVMi65ZBP5WSdAZAsAeObK5NW4H7yR5PqkiIEoyszdLO/bw==}
+
+  '@yozora/invariant@2.3.16':
+    resolution: {integrity: sha512-dmLv3ibuaBwEc+hqNyTaEjJZxqTar5+n+S3ndpmUCKtPwQG3GZB07JYjwm3n/HgoC+fL6GucLjStu1mt4p1Y6A==}
+
+  '@yozora/parser@2.3.16':
+    resolution: {integrity: sha512-7WLq4/2E3DaztuzOo5oN23D0FyNO/Hqyi8Uv3dYfDZTO3diCa5Y6Yu5/pNxEtxfbDsKpUs9jpJgYl98bO27amQ==}
+
+  '@yozora/tokenizer-admonition@2.3.16':
+    resolution: {integrity: sha512-pYgjKUq9vZc66d/LRWASLY+h2p/L0Qz3wSR4vekGd7YOk8Y7ijDePnGGMs79Us3aM2xj9uU72KfQr0ZoeWZp1A==}
+
+  '@yozora/tokenizer-autolink-extension@2.3.16':
+    resolution: {integrity: sha512-L8OXuDpub8aZw3Z0Sp0iutg6SOJp8R2gKO03H6/ZIyxPSttIqNLA7Y5KujAUHQDsUojfQL2xHynDc37263o1Ig==}
+
+  '@yozora/tokenizer-autolink@2.3.16':
+    resolution: {integrity: sha512-csYZPcVtSd4jueEPwJW0pcWAR0+S70qAP/Q4UM+Hb6pMXUkC9SriT3sDpxzbQQNK5/5wXfrOV2JPMMCZK8P6eQ==}
+
+  '@yozora/tokenizer-blockquote@2.3.16':
+    resolution: {integrity: sha512-FrzlJp3RDn94u7nIhgccdL+yogsxXGY5q51QKk/wDY6XpMqWaKhzT6Uz/ykgnMshAcZuURMpirZnetjH/mJ9Zw==}
+
+  '@yozora/tokenizer-break@2.3.16':
+    resolution: {integrity: sha512-AOZilDLbcverhrRgHrT5WqZ5nYH0epnFvGjNe/ZTvqYO8QD+iKoiqk71n/tk6vC43cbSnH7t8/RPnotXDXolzw==}
+
+  '@yozora/tokenizer-definition@2.3.16':
+    resolution: {integrity: sha512-GI/jSjYDo5GbMBrT9gVovitgBBfTleZLouDr9OrrxpNxGiSq/5bSONOySIyq0WZUV7ELrXrJlo9M6r+PZp1oDQ==}
+
+  '@yozora/tokenizer-delete@2.3.16':
+    resolution: {integrity: sha512-U/8ECs2s5Uam42eKv1k9aaZMwZOzxSGxiYltzsDkL81uJY+36hoc/xm9lcW4OveW4flw4w1xUntv4gPek5H5fA==}
+
+  '@yozora/tokenizer-ecma-import@2.3.16':
+    resolution: {integrity: sha512-C7wdkEEiLwxAXalXMoJhKl3C9jKJ8z7+z6U6IaUjqEyVeyexLC984idDC2rRXYx4D19221JOtVdHFIfE2wdxCg==}
+
+  '@yozora/tokenizer-emphasis@2.3.16':
+    resolution: {integrity: sha512-NpvHEbSfvOmyZDhEMlSWcdwlePz0CMM2cWbA+PwwFAzuENZw2paH1mxV7LoneNJt/z45FAHnmZJZahPt2xbmYg==}
+
+  '@yozora/tokenizer-fenced-block@2.3.16':
+    resolution: {integrity: sha512-VKNHQ/oz0Of49M7K+0y9Fogk808CFkNIjR6dhMvK/E2CopFZsIROHWVbVqtr45+iYF/iUKKY0WPLADXg8pDmrQ==}
+
+  '@yozora/tokenizer-fenced-code@2.3.16':
+    resolution: {integrity: sha512-2GudqNBsQq8mmOebcdxi/07e0o+sFhJYF00Y3ejPOO1onrkBKi+kQwIXfd7iXKXtbwBwYY5QlAbe5qIfDeGlYw==}
+
+  '@yozora/tokenizer-footnote-definition@2.3.16':
+    resolution: {integrity: sha512-WtLcNmbVbS27umlGVENkXbatWgTWBdxzksWupc+JtqdG81pgRSn4aOobBNcWS41sZq9W2IOMdzBoQkMTngjBIg==}
+
+  '@yozora/tokenizer-footnote-reference@2.3.16':
+    resolution: {integrity: sha512-XUIPl+tG1covWUFeq7I7XJlrlx1U7WUxVoilEs8TbyZhM44UpzZkFaNVpbCHiM4w0j5RB9m2lc2OdGscByUutA==}
+
+  '@yozora/tokenizer-footnote@2.3.16':
+    resolution: {integrity: sha512-pqp8U8e9d11ZpLaAeaejFMCygcLrEodq68A+FjiUUhdj51rKBtT3Wj7mjlDr333BmXoqMxv0iayFAgDPXGigvQ==}
+
+  '@yozora/tokenizer-heading@2.3.16':
+    resolution: {integrity: sha512-5lbVekF2ryVPz55GzIrSdFMxhvtwKvZP3WMNQA5u57EvWWXWZKvfprSsXt14DJvrRvMd5QVowffJt90cSxOTEw==}
+
+  '@yozora/tokenizer-html-block@2.3.16':
+    resolution: {integrity: sha512-d3rxosphPtgnmzueDoNSgwweaU9bjThqC72njmJmknY6CyIYldc36H3e89CpOMY8UJ7f/ArvjdVfFEshGaWqBQ==}
+
+  '@yozora/tokenizer-html-inline@2.3.16':
+    resolution: {integrity: sha512-6Phe6E6AKWshy3YN6acejU2O8RjFs7IEJM5D8rwrYSX4JHA7nHIJgy6M8Jb3u8Zs/fS1/01khuwBXBjGEJgrGg==}
+
+  '@yozora/tokenizer-image-reference@2.3.16':
+    resolution: {integrity: sha512-eTm5CvYRLb8Ta+TXpN/O1K0H8ZcbN2F/hCOD5rE0YsqmZCfuLKSn+PmxuITbe43J+ctSrhQXPqrkQ3gVmionTQ==}
+
+  '@yozora/tokenizer-image@2.3.16':
+    resolution: {integrity: sha512-SdcThUBUQVnacQBo8O642Lx1ioq4YBxMTyfW/hKOXLE5kfJllTWGkentgd615cgzlpUovZBdrxQ31ybQVkVpNg==}
+
+  '@yozora/tokenizer-indented-code@2.3.16':
+    resolution: {integrity: sha512-YgZEPrkLQPUtoVQiTqPgaVDEDrV0ipM7ajsVzTKpnt1OG0lLXXW0bn430UAlDC+Zg9Kak9aL7VZknTb2Dmt/Mg==}
+
+  '@yozora/tokenizer-inline-code@2.3.16':
+    resolution: {integrity: sha512-7ttZZYUQe1kTXLUmpJEY8m/KfL5280DpdyehBtwM0C8PIbl5N0387JLeBkt11VGda4JCWwnk5Fxt0Dkl7U3oTw==}
+
+  '@yozora/tokenizer-inline-math@2.3.16':
+    resolution: {integrity: sha512-d36YQryXPQOUL4yvjfcQVdSuhetdW2RmwTSb+ThFKlUl4GSsTmcsvRdoupjghZI2t9Awil/oRxudJeXjp46OgA==}
+
+  '@yozora/tokenizer-link-reference@2.3.16':
+    resolution: {integrity: sha512-Vt5Ohy7yJntV6X42fKObrUNFwxgRjl8Kjvx6DvQ+0QzQOFBTVy0zdI7H3Ys4DsOQyXSOSeR2GvbxkH8Z52iOLA==}
+
+  '@yozora/tokenizer-link@2.3.16':
+    resolution: {integrity: sha512-8jo5/cTYJduclRWkvc/uDuPGQcYruM7Mhjq1DXaLupo5OYyF9wAsb+6W1ZPPrpEn1hnQTb6p+4Gk5gqWfYjb2w==}
+
+  '@yozora/tokenizer-list@2.3.16':
+    resolution: {integrity: sha512-UDhPmtvj7se+CfZPtb4SAERUlBDurxMiSnfNncIRLU8vwTkPbvQvkvSNJBGaXJpoh28q7pAbby3AbdR5/O3NSg==}
+
+  '@yozora/tokenizer-math@2.3.16':
+    resolution: {integrity: sha512-67tot5fblQvQ4p0MJLFNM3hkPsUHRhfEQKMZdc6Ldcghm1sMFcuM8/zwerJRa9xSqaOO8jVoXetdqoiP7grGHQ==}
+
+  '@yozora/tokenizer-paragraph@2.3.16':
+    resolution: {integrity: sha512-j/uHiDMOtGBn1ng1IGuLIwMI5U1/AHjAyGF/RpNoZJ2slNXhH8INW3qoOQAqwsmQUbKzcckxoZv11xnG9l8Pnw==}
+
+  '@yozora/tokenizer-setext-heading@2.3.16':
+    resolution: {integrity: sha512-KTCYaUlhXvPk16j2WWYlkUwYhnNVdAgwEvjH1bk5K1WrYDbe3WQcRt6uZcI1AwGwLthjGEd1Cc6fzURXdnTTuQ==}
+
+  '@yozora/tokenizer-table@2.3.16':
+    resolution: {integrity: sha512-/6y4wHEF1BZouGLWzT/Ph9Rgbb9msELcEjtQzJ0hwtHMzsTbbCJUosr8viH3UHfOPLcgZmK9if1WDnrzBWtXTw==}
+
+  '@yozora/tokenizer-text@2.3.16':
+    resolution: {integrity: sha512-VPQtAea9RcrHcguRe5EZ+1ucBTDaOAyb01ZgQPL8aQI0PK36lIjzxgGPypHEEHYtM0+aj+CAoBYe6TG1LeVuFQ==}
+
+  '@yozora/tokenizer-thematic-break@2.3.16':
+    resolution: {integrity: sha512-ihys5eKHE5OWqena0g6Di69l0xyoN0fn2Zb60bZZ7pFiuB34JSaV//lXbfQPk/F6V4WprYMEM9zZGEp82POlzA==}
 
   acorn@8.16.0:
     resolution: {integrity: sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw==}
@@ -2970,6 +3096,263 @@ snapshots:
       '@vitest/pretty-format': 3.2.4
       loupe: 3.2.1
       tinyrainbow: 2.0.0
+
+  '@yozora/ast-util@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+
+  '@yozora/ast@2.3.16': {}
+
+  '@yozora/character@2.3.16': {}
+
+  '@yozora/core-parser@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/ast-util': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+      '@yozora/invariant': 2.3.16
+
+  '@yozora/core-tokenizer@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+
+  '@yozora/invariant@2.3.16': {}
+
+  '@yozora/parser@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/core-parser': 2.3.16
+      '@yozora/tokenizer-admonition': 2.3.16
+      '@yozora/tokenizer-autolink': 2.3.16
+      '@yozora/tokenizer-autolink-extension': 2.3.16
+      '@yozora/tokenizer-blockquote': 2.3.16
+      '@yozora/tokenizer-break': 2.3.16
+      '@yozora/tokenizer-definition': 2.3.16
+      '@yozora/tokenizer-delete': 2.3.16
+      '@yozora/tokenizer-ecma-import': 2.3.16
+      '@yozora/tokenizer-emphasis': 2.3.16
+      '@yozora/tokenizer-fenced-code': 2.3.16
+      '@yozora/tokenizer-footnote': 2.3.16
+      '@yozora/tokenizer-footnote-definition': 2.3.16
+      '@yozora/tokenizer-footnote-reference': 2.3.16
+      '@yozora/tokenizer-heading': 2.3.16
+      '@yozora/tokenizer-html-block': 2.3.16
+      '@yozora/tokenizer-html-inline': 2.3.16
+      '@yozora/tokenizer-image': 2.3.16
+      '@yozora/tokenizer-image-reference': 2.3.16
+      '@yozora/tokenizer-indented-code': 2.3.16
+      '@yozora/tokenizer-inline-code': 2.3.16
+      '@yozora/tokenizer-inline-math': 2.3.16
+      '@yozora/tokenizer-link': 2.3.16
+      '@yozora/tokenizer-link-reference': 2.3.16
+      '@yozora/tokenizer-list': 2.3.16
+      '@yozora/tokenizer-math': 2.3.16
+      '@yozora/tokenizer-paragraph': 2.3.16
+      '@yozora/tokenizer-setext-heading': 2.3.16
+      '@yozora/tokenizer-table': 2.3.16
+      '@yozora/tokenizer-text': 2.3.16
+      '@yozora/tokenizer-thematic-break': 2.3.16
+
+  '@yozora/tokenizer-admonition@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+      '@yozora/tokenizer-fenced-block': 2.3.16
+
+  '@yozora/tokenizer-autolink-extension@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+      '@yozora/tokenizer-autolink': 2.3.16
+
+  '@yozora/tokenizer-autolink@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-blockquote@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-break@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-definition@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-delete@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-ecma-import@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-emphasis@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-fenced-block@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-fenced-code@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+      '@yozora/tokenizer-fenced-block': 2.3.16
+
+  '@yozora/tokenizer-footnote-definition@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-footnote-reference@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+      '@yozora/tokenizer-footnote-definition': 2.3.16
+
+  '@yozora/tokenizer-footnote@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+      '@yozora/tokenizer-link': 2.3.16
+
+  '@yozora/tokenizer-heading@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-html-block@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-html-inline@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+      '@yozora/tokenizer-html-block': 2.3.16
+
+  '@yozora/tokenizer-image-reference@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+      '@yozora/tokenizer-image': 2.3.16
+      '@yozora/tokenizer-link': 2.3.16
+      '@yozora/tokenizer-link-reference': 2.3.16
+
+  '@yozora/tokenizer-image@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+      '@yozora/tokenizer-link': 2.3.16
+
+  '@yozora/tokenizer-indented-code@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-inline-code@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-inline-math@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-link-reference@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+      '@yozora/tokenizer-link': 2.3.16
+
+  '@yozora/tokenizer-link@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-list@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-math@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+      '@yozora/tokenizer-fenced-block': 2.3.16
+
+  '@yozora/tokenizer-paragraph@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-setext-heading@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-table@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-text@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
+
+  '@yozora/tokenizer-thematic-break@2.3.16':
+    dependencies:
+      '@yozora/ast': 2.3.16
+      '@yozora/character': 2.3.16
+      '@yozora/core-tokenizer': 2.3.16
 
   acorn@8.16.0: {}
 

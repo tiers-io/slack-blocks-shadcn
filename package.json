@@ -23,6 +23,10 @@
     "prepare": "tsup"
   },
   "dependencies": {
+    "@yozora/ast": "^2.3.16",
+    "@yozora/character": "^2.3.16",
+    "@yozora/core-tokenizer": "^2.3.16",
+    "@yozora/parser": "^2.3.16",
     "node-emoji": "^2.1.3",
     "react-markdown": "^9.1.0",
     "remark-gfm": "^4.0.1"
