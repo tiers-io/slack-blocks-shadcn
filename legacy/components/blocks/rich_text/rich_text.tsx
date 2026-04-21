@@ -1,0 +1,185 @@
+import { useMemo } from "react";
+import { RichTextBlockElement, RichTextList } from "../../../types";
+import { RichTextBlock } from "../../../types";
+import { numberToAlpha, numberToRoman } from "../../../utils";
+import { RichTextListWrapper } from "./rich_text_list_wrapper";
+import { RichTextSectionElement } from "./rich_text_section";
+
+type RichTextProps = {
+  data: RichTextBlock;
+};
+
+export const RichText = (props: RichTextProps) => {
+  const { elements, block_id } = props.data;
+
+  let _consecutive_index_map: Record<NonNullable<RichTextList["indent"]>, number> = {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0,
+    "8": 0,
+  };
+
+  return (
+    <div id={block_id} className="slack_blocks_to_jsx__rich_text">
+      {elements.map((element, i) => {
+        let _local_index = 0;
+
+        if (element.type !== "rich_text_list") {
+          for (let i = 0; i <= 8; i++) {
+            _consecutive_index_map[i as NonNullable<RichTextList["indent"]>] = 0;
+          }
+        } else {
+          const indent = element.indent || 0;
+
+          for (let i = indent + 1; i <= 8; i++) {
+            _consecutive_index_map[i as NonNullable<RichTextList["indent"]>] = 0;
+          }
+
+          _local_index = _consecutive_index_map[indent];
+          _consecutive_index_map[indent] += element.elements.length;
+        }
+
+        return (
+          <Element
+            key={`${element.type}__${i}`}
+            element={element}
+            consecutive_index={_local_index}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+type ElementProps = {
+  element: RichTextBlockElement;
+  consecutive_index: number;
+};
+
+const Element = (props: ElementProps) => {
+  const { element, consecutive_index } = props;
+
+  if (element.type === "rich_text_list") {
+    const { elements, style, border = 0, indent, offset = 0 } = element;
+
+    const effectiveStart = style === "ordered" ? offset || 0 : 0;
+
+    return (
+      <div className="flex gap-2 slack_blocks_to_jsx__rich_text_list_element">
+        {border === 1 && (
+          <div className="w-1 rounded bg-gray-primary dark:bg-dark-text-high self-stretch"></div>
+        )}
+
+        <RichTextListWrapper element={element} className="list-none">
+          {elements.map((el, i) => {
+            return (
+              <li
+                className="flex"
+                key={`${el.type}__${i}`}
+                style={{
+                  marginLeft: indent ? (indent > 5 ? 0 : indent * 28) : 0,
+                }}
+              >
+                {style === "ordered" && (
+                  <span className="w-[22px] h-[22px] shrink-0 flex items-center justify-center">
+                    {(indent === undefined || indent === 0 || indent === 3 || indent === 6) &&
+                      `${consecutive_index + effectiveStart + i + 1}.`}
+                    {(indent === 1 || indent === 4 || indent === 7) &&
+                      `${numberToAlpha(consecutive_index + effectiveStart + i + 1)}.`}
+                    {(indent === 2 || indent === 5 || indent === 8) &&
+                      `${numberToRoman(consecutive_index + effectiveStart + i + 1)}.`}
+                  </span>
+                )}
+
+                {style === "bullet" && (
+                  <span className="w-[22px] h-[22px] shrink-0 flex items-center justify-center">
+                    {(indent === undefined || indent === 0 || indent === 3 || indent === 6) && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    )}
+
+                    {(indent === 1 || indent === 4 || indent === 7) && (
+                      <span className="w-1.5 h-1.5 rounded-full border border-current"></span>
+                    )}
+
+                    {(indent === 2 || indent === 5 || indent === 8) && (
+                      <span className="w-1.5 h-1.5 rounded-[1.5px] bg-current"></span>
+                    )}
+                  </span>
+                )}
+
+                <div
+                  style={{
+                    marginLeft: 6,
+                  }}
+                >
+                  <Element key={`${element.type}__${i}`} element={el} consecutive_index={0} />
+                </div>
+              </li>
+            );
+          })}
+        </RichTextListWrapper>
+      </div>
+    );
+  }
+
+  if (element.type === "rich_text_preformatted") {
+    const { elements, border } = element;
+
+    return (
+      <code className="flex gap-2 w-full slack_blocks_to_jsx__rich_text_preformatted_element">
+        {border === 1 && (
+          <div className="w-1 rounded bg-gray-primary dark:bg-dark-text-high self-stretch"></div>
+        )}
+
+        <pre
+          className="p-2 rounded-lg mt-2 mb-1 ml-1 whitespace-pre-wrap bg-gray-secondary dark:bg-dark-bg-secondary text-xs leading-[1.50001] border dark:border-dark-border grow"
+          style={{
+            wordWrap: "break-word",
+            wordBreak: "break-all",
+          }}
+        >
+          {elements.map((el, i) => {
+            return <RichTextSectionElement key={`${el.type}__${i}`} element={el} />;
+          })}
+        </pre>
+      </code>
+    );
+  }
+
+  if (element.type === "rich_text_quote") {
+    const { elements, border } = element;
+
+    return (
+      <blockquote className="flex gap-2 slack_blocks_to_jsx__rich_text_quote_element">
+        {border === 1 && (
+          <div className="w-1 rounded bg-gray-primary dark:bg-dark-text-high self-stretch"></div>
+        )}
+
+        <p>
+          {elements.map((el, i) => {
+            return <RichTextSectionElement key={`${el.type}__${i}`} element={el} />;
+          })}
+        </p>
+      </blockquote>
+    );
+  }
+
+  if (element.type === "rich_text_section") {
+    const { elements } = element;
+
+    return (
+      <p className="inline-block slack_blocks_to_jsx__rich_text_section_element">
+        {elements.map((el, i) => {
+          return <RichTextSectionElement key={`${el.type}__${i}`} element={el} />;
+        })}
+      </p>
+    );
+  }
+
+  return null;
+};
