@@ -3,9 +3,8 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useOnAction } from "../components-registry";
 
-// The five text-ish inputs. All render disabled — we surface the initial
-// value (or placeholder) so the Slack message is still legible without
-// interaction.
+// Text inputs emit onAction on blur (default) or per-keystroke when the
+// consumer opts in via dispatch_action_config.
 
 type Common = {
   action_id: string;
@@ -14,11 +13,17 @@ type Common = {
   focus_on_load?: boolean;
 };
 
+export interface DispatchActionConfig {
+  /** Upstream: ["on_enter_pressed", "on_character_entered"] */
+  trigger_actions_on?: ("on_enter_pressed" | "on_character_entered")[];
+}
+
 export interface PlainTextInputData extends Common {
   type: "plain_text_input";
   multiline?: boolean;
   min_length?: number;
   max_length?: number;
+  dispatch_action_config?: DispatchActionConfig;
 }
 export interface NumberInputData extends Common {
   type: "number_input";
@@ -37,65 +42,112 @@ export interface RichTextInputData extends Common {
 }
 
 export function PlainTextInput({ element }: { element: PlainTextInputData }) {
+  const onAction = useOnAction();
+  const [value, setValue] = useState(element.initial_value ?? "");
   const placeholder = element.placeholder?.text ?? "";
+  const triggers = element.dispatch_action_config?.trigger_actions_on ?? [];
+  const emitOnChar = triggers.includes("on_character_entered");
+  const emitOnEnter = triggers.includes("on_enter_pressed");
+
+  const emit = (v: string) => {
+    onAction?.({
+      type: "plain_text_input",
+      action_id: element.action_id,
+      value: v,
+    });
+  };
+
+  const common = {
+    "data-element": "plain_text_input",
+    placeholder,
+    value,
+    minLength: element.min_length,
+    maxLength: element.max_length,
+    autoFocus: element.focus_on_load,
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setValue(e.target.value);
+      if (emitOnChar) emit(e.target.value);
+    },
+    onBlur: () => emit(value),
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (emitOnEnter && e.key === "Enter" && !e.shiftKey) {
+        if (!element.multiline) e.preventDefault();
+        emit(value);
+      }
+    },
+  };
+
   if (element.multiline) {
-    return (
-      <Textarea
-        disabled
-        data-element="plain_text_input"
-        aria-disabled="true"
-        placeholder={placeholder}
-        defaultValue={element.initial_value}
-      />
-    );
+    return <Textarea {...common} />;
   }
-  return (
-    <Input
-      disabled
-      data-element="plain_text_input"
-      aria-disabled="true"
-      placeholder={placeholder}
-      defaultValue={element.initial_value}
-    />
-  );
+  return <Input {...common} />;
 }
 
 export function NumberInput({ element }: { element: NumberInputData }) {
+  const onAction = useOnAction();
+  const [value, setValue] = useState(element.initial_value ?? "");
   return (
     <Input
       type="number"
-      disabled
       data-element="number_input"
-      aria-disabled="true"
       placeholder={element.placeholder?.text}
-      defaultValue={element.initial_value}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onBlur={() =>
+        onAction?.({
+          type: "number_input",
+          action_id: element.action_id,
+          value,
+        })
+      }
+      min={element.min_value}
+      max={element.max_value}
       step={element.is_decimal_allowed ? "any" : "1"}
+      autoFocus={element.focus_on_load}
     />
   );
 }
 
 export function EmailInput({ element }: { element: EmailInputData }) {
+  const onAction = useOnAction();
+  const [value, setValue] = useState(element.initial_value ?? "");
   return (
     <Input
       type="email"
-      disabled
       data-element="email_text_input"
-      aria-disabled="true"
       placeholder={element.placeholder?.text}
-      defaultValue={element.initial_value}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onBlur={() =>
+        onAction?.({
+          type: "email_text_input",
+          action_id: element.action_id,
+          value,
+        })
+      }
+      autoFocus={element.focus_on_load}
     />
   );
 }
 
 export function UrlInput({ element }: { element: UrlInputData }) {
+  const onAction = useOnAction();
+  const [value, setValue] = useState(element.initial_value ?? "");
   return (
     <Input
       type="url"
-      disabled
       data-element="url_text_input"
-      aria-disabled="true"
       placeholder={element.placeholder?.text}
-      defaultValue={element.initial_value}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onBlur={() =>
+        onAction?.({
+          type: "url_text_input",
+          action_id: element.action_id,
+          value,
+        })
+      }
+      autoFocus={element.focus_on_load}
     />
   );
 }

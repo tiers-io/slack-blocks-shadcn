@@ -15,11 +15,11 @@ function wrap(element: Record<string, unknown>) {
 }
 
 describe("Phase F: input elements", () => {
-  it("plain_text_input renders as disabled <input>", () => {
+  it("plain_text_input renders an editable <input> with initial value", () => {
     render(wrap({ type: "plain_text_input", action_id: "n", initial_value: "hi" }));
     const el = document.querySelector('[data-element="plain_text_input"]') as HTMLInputElement;
     expect(el).toBeInTheDocument();
-    expect(el).toBeDisabled();
+    expect(el).not.toBeDisabled();
     expect(el.value).toBe("hi");
   });
 
@@ -36,11 +36,11 @@ describe("Phase F: input elements", () => {
     ["number_input", "number"],
     ["email_text_input", "email"],
     ["url_text_input", "url"],
-  ])("%s disabled input has type %s", (elType, htmlType) => {
+  ])("%s is an editable input with type %s", (elType, htmlType) => {
     render(wrap({ type: elType, action_id: "x" }));
     const el = document.querySelector(`[data-element="${elType}"]`) as HTMLInputElement;
     expect(el.type).toBe(htmlType);
-    expect(el).toBeDisabled();
+    expect(el).not.toBeDisabled();
   });
 
   it("rich_text_input renders an editable multi-line textarea", () => {
@@ -127,7 +127,7 @@ describe("Phase F: input elements", () => {
     expect(btn!.getAttribute("aria-label")).toBe("Overflow menu");
   });
 
-  it("file_input + url_source render disabled with their labels", () => {
+  it("file_input is interactive; url_source remains a read-only label", () => {
     render(
       <Message
         size="default"
@@ -142,7 +142,14 @@ describe("Phase F: input elements", () => {
         ] as Block[]}
       />,
     );
-    expect(document.querySelector('[data-element="file_input"]')).toBeDisabled();
+    const fi = document.querySelector('[data-element="file_input"]');
+    expect(fi).not.toBeDisabled();
+    const hidden = document.querySelector(
+      '[data-element="file_input_hidden"]',
+    ) as HTMLInputElement;
+    expect(hidden).toBeInTheDocument();
+    expect(hidden.accept).toBe(".pdf,.png");
+    expect(document.querySelector('[data-element="url_source"]')).toBeDisabled();
     expect(screen.getByText("https://example.com")).toBeInTheDocument();
   });
 });
