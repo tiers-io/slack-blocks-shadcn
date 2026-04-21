@@ -1,0 +1,56 @@
+[
+  {
+    "type": "rich_text",
+    "elements": [
+      {
+        "type": "rich_text_section",
+        "elements": [
+          { "type": "text", "text": "Deploy report for " },
+          { "type": "text", "text": "main", "style": { "code": true } },
+          { "type": "text", "text": " — owner " },
+          { "type": "user", "user_id": "U07HBFWRWA2" },
+          { "type": "text", "text": " (" },
+          { "type": "link", "url": "https://ci.example/build/4821", "text": "view build" },
+          { "type": "text", "text": "). " },
+          { "type": "text", "text": "Everything green", "style": { "bold": true, "italic": true } },
+          { "type": "text", "text": "." }
+        ]
+      },
+      {
+        "type": "rich_text_list",
+        "style": "bullet",
+        "elements": [
+          {
+            "type": "rich_text_section",
+            "elements": [{ "type": "text", "text": "auth: 42 tests pass" }]
+          },
+          {
+            "type": "rich_text_section",
+            "elements": [{ "type": "text", "text": "timeline: 128 tests pass" }]
+          },
+          {
+            "type": "rich_text_section",
+            "elements": [
+              { "type": "text", "text": "coverage: " },
+              { "type": "text", "text": "94%", "style": { "bold": true } }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "rich_text_quote",
+        "elements": [
+          { "type": "text", "text": "cc " },
+          { "type": "broadcast", "range": "here" },
+          { "type": "text", "text": " — if anyone wants to take a look before rollout." }
+        ]
+      },
+      {
+        "type": "rich_text_preformatted",
+        "elements": [
+          { "type": "text", "text": "$ curl -s https://api.example/status | jq .\n{\n  \"healthy\": true,\n  \"version\": \"v0.42.1\"\n}" }
+        ]
+      }
+    ]
+  }
+]
