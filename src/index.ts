@@ -13,3 +13,11 @@ export type {
   HookEmoji,
   HookDate,
 } from "./context";
+export {
+  DEFAULT_COMPONENTS,
+  ComponentsContext,
+  useComponent,
+  type ComponentOverrides,
+  type ActionPayload,
+  type OnActionCallback,
+} from "./components-registry";
