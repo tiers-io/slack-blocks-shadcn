@@ -16,11 +16,21 @@ import {
   ContextBlock,
   ImageBlock,
   RichTextBlock,
+  ActionsBlock,
+  FileBlock,
+  VideoBlock,
+  MarkdownBlock,
+  AlertBlock,
   type SectionBlockData,
   type HeaderBlockData,
   type ContextBlockData,
   type ImageBlockData,
   type RichTextBlockData,
+  type ActionsBlockData,
+  type FileBlockData,
+  type VideoBlockData,
+  type MarkdownBlockData,
+  type AlertBlockData,
 } from "./blocks";
 import type { Block, BlockSize } from "./types";
 
@@ -82,6 +92,16 @@ function BlockDispatch({ block }: { block: Block }): ReactNode {
       return <ImageBlock block={block as unknown as ImageBlockData} />;
     case "rich_text":
       return <RichTextBlock block={block as unknown as RichTextBlockData} />;
+    case "actions":
+      return <ActionsBlock block={block as unknown as ActionsBlockData} />;
+    case "file":
+      return <FileBlock block={block as unknown as FileBlockData} />;
+    case "video":
+      return <VideoBlock block={block as unknown as VideoBlockData} />;
+    case "markdown":
+      return <MarkdownBlock block={block as unknown as MarkdownBlockData} />;
+    case "alert":
+      return <AlertBlock block={block as unknown as AlertBlockData} />;
     default:
       if (isDev()) {
         // eslint-disable-next-line no-console
