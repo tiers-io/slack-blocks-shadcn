@@ -50,12 +50,12 @@ describe("Phase F: input elements", () => {
     expect(el).toBeDisabled();
   });
 
-  it("datepicker shows initial_date label", () => {
+  it("datepicker shows initial_date label (and is interactive)", () => {
     render(wrap({ type: "datepicker", action_id: "d", initial_date: "2026-04-21" }));
     expect(screen.getByText("2026-04-21")).toBeInTheDocument();
-    expect(
-      document.querySelector('[data-element="datepicker"]'),
-    ).toBeDisabled();
+    const trigger = document.querySelector('[data-element="datepicker"]');
+    expect(trigger).not.toBeDisabled();
+    expect(trigger).toHaveAttribute("aria-haspopup", "dialog");
   });
 
   it("timepicker shows initial_time label", () => {
