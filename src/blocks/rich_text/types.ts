@@ -6,8 +6,14 @@ export interface RichTextStyle {
   bold?: boolean;
   italic?: boolean;
   strike?: boolean;
+  underline?: boolean;
   code?: boolean;
-  unlink?: boolean; // applies to links: render visually but no href
+  /** Mention-only: renders with a highlighted background (Slack's search-highlight semantics). */
+  highlight?: boolean;
+  /** Mention-only: client-side search highlight (tiers-native styling). */
+  client_highlight?: boolean;
+  /** Link-only: render the text but disable the href. */
+  unlink?: boolean;
 }
 
 export interface RichTextText {
@@ -61,6 +67,7 @@ export interface RichTextDate {
   format?: string;
   url?: string;
   fallback?: string;
+  style?: RichTextStyle;
 }
 
 export interface RichTextColor {
@@ -87,22 +94,29 @@ export interface RichTextSectionElement {
 export interface RichTextListElement {
   type: "rich_text_list";
   style: "bullet" | "ordered";
+  /** 0-8; upstream clamps > 5 to margin-left: 0. */
   indent?: number;
+  /** Starting number for ordered lists (Slack uses 0-based; we add 1). */
   offset?: number;
+  /** 0 or 1 — when 1 render a left vertical bar. */
   border?: number;
   elements: RichTextSectionElement[];
 }
 
 export interface RichTextQuoteElement {
   type: "rich_text_quote";
+  border?: number;
   elements: RichTextInlineElement[];
 }
 
 export interface RichTextPreformattedElement {
   type: "rich_text_preformatted";
   border?: number;
+  /** Optional language hint, surfaced via `data-language` on the <pre>. */
+  language?: string;
   elements: (RichTextText | RichTextLink)[];
 }
+
 
 export type RichTextSubBlock =
   | RichTextSectionElement
