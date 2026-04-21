@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { MentionPill } from "../../../composition/MentionPill";
 import { useHooks, useData } from "../../../context";
+import { useComponent } from "../../../components-registry";
 import { cn } from "../../../utils/cn";
 import { styleToClass } from "./style";
 import type {
@@ -20,6 +20,7 @@ function withStyle(node: ReactNode, style: RichTextStyle | undefined): ReactNode
 export function UserElement({ element }: { element: RichTextUser }) {
   const hooks = useHooks();
   const data = useData();
+  const MentionPill = useComponent("MentionPill");
   const resolved = data.users?.find((u) => u.id === element.user_id);
   const display = resolved?.name ?? element.user_id;
   if (element.style?.unlink) {
@@ -42,6 +43,7 @@ export function UserElement({ element }: { element: RichTextUser }) {
 export function ChannelElement({ element }: { element: RichTextChannel }) {
   const hooks = useHooks();
   const data = useData();
+  const MentionPill = useComponent("MentionPill");
   const resolved = data.channels?.find((c) => c.id === element.channel_id);
   const display = resolved?.name ?? element.channel_id;
   if (element.style?.unlink) {
@@ -62,6 +64,7 @@ export function UsergroupElement({
 }) {
   const hooks = useHooks();
   const data = useData();
+  const MentionPill = useComponent("MentionPill");
   const resolved = data.user_groups?.find((g) => g.id === element.usergroup_id);
   const display = resolved?.name ?? element.usergroup_id;
   if (element.style?.unlink) {
@@ -79,6 +82,7 @@ export function UsergroupElement({
 
 export function BroadcastElement({ element }: { element: RichTextBroadcast }) {
   const hooks = useHooks();
+  const MentionPill = useComponent("MentionPill");
   const pill =
     element.range === "everyone" && hooks.atEveryone ? (
       <>{hooks.atEveryone()}</>
