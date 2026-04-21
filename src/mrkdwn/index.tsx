@@ -1,8 +1,7 @@
 import { Fragment, type ReactNode } from "react";
 import { get as getEmoji } from "node-emoji";
-import { MentionPill } from "../composition/MentionPill";
-import { InlineLink } from "../composition/InlineLink";
 import { useHooks, useData } from "../context";
+import { useComponent } from "../components-registry";
 
 // Slack mrkdwn → React nodes. Non-goals: fidelity to CommonMark. Goal:
 // cover everything Slack actually emits in `type: "mrkdwn"` text objects
@@ -33,6 +32,7 @@ const TOKEN_SOURCE =
 type RenderedFrag = ReactNode;
 
 function RenderMentionOrLink({ raw }: { raw: string }): ReactNode {
+  const InlineLink = useComponent("InlineLink");
   const inner = raw.slice(1, -1);
   if (inner.startsWith("@")) {
     const [id, name] = inner.slice(1).split("|", 2);
@@ -91,6 +91,7 @@ function RenderMentionOrLink({ raw }: { raw: string }): ReactNode {
 function UserMention({ user_id, label }: { user_id: string; label: string }) {
   const hooks = useHooks();
   const data = useData();
+  const MentionPill = useComponent("MentionPill");
   const resolved = data.users?.find((u) => u.id === user_id);
   const display = resolved?.name ?? label;
   if (hooks.user) {
@@ -108,6 +109,7 @@ function ChannelMention({
 }) {
   const hooks = useHooks();
   const data = useData();
+  const MentionPill = useComponent("MentionPill");
   const resolved = data.channels?.find((c) => c.id === channel_id);
   const display = resolved?.name ?? label;
   if (hooks.channel) {
@@ -125,6 +127,7 @@ function UsergroupMention({
 }) {
   const hooks = useHooks();
   const data = useData();
+  const MentionPill = useComponent("MentionPill");
   const resolved = data.user_groups?.find((g) => g.id === usergroup_id);
   const display = resolved?.name ?? label;
   if (hooks.usergroup) {
@@ -135,6 +138,7 @@ function UsergroupMention({
 
 function Broadcast({ kind, label }: { kind: string; label: string }) {
   const hooks = useHooks();
+  const MentionPill = useComponent("MentionPill");
   if (kind === "everyone" && hooks.atEveryone) return <>{hooks.atEveryone()}</>;
   if (kind === "channel" && hooks.atChannel) return <>{hooks.atChannel()}</>;
   if (kind === "here" && hooks.atHere) return <>{hooks.atHere()}</>;
