@@ -1,0 +1,11 @@
+[
+  { "type": "section", "text": { "type": "mrkdwn", "text": "Pull request opened: *Fix auth loop* (+120, -38)" } },
+  {
+    "type": "context",
+    "elements": [
+      { "type": "image", "image_url": "https://avatars.githubusercontent.com/u/1?v=4", "alt_text": "author avatar" },
+      { "type": "mrkdwn", "text": "by <@U07HBFWRWA2> in <#C0X1Y2Z3|platform>" },
+      { "type": "mrkdwn", "text": "• `~/auth/refresh.ts`" }
+    ]
+  }
+]
