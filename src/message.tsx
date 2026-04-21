@@ -8,6 +8,7 @@ import {
   type Data,
 } from "./context";
 import { sizing } from "./sizing";
+import { isDev } from "./utils/env";
 import type { Block, BlockSize } from "./types";
 
 // Root render. Threads size/hooks/data through context, then iterates
@@ -60,7 +61,7 @@ function BlockDispatch({ block }: { block: Block }): ReactNode {
   // later plug in here instead of growing a new switch.
   switch (type) {
     default:
-      if (import.meta.env?.DEV) {
+      if (isDev()) {
         // eslint-disable-next-line no-console
         console.warn(
           `[@tiers-io/slack-blocks-shadcn] unsupported block type: ${type}`,
