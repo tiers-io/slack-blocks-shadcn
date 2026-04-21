@@ -9,6 +9,17 @@ import {
 } from "./context";
 import { sizing } from "./sizing";
 import { isDev } from "./utils/env";
+import {
+  SectionBlock,
+  DividerBlock,
+  HeaderBlock,
+  ContextBlock,
+  ImageBlock,
+  type SectionBlockData,
+  type HeaderBlockData,
+  type ContextBlockData,
+  type ImageBlockData,
+} from "./blocks";
 import type { Block, BlockSize } from "./types";
 
 // Root render. Threads size/hooks/data through context, then iterates
@@ -56,10 +67,17 @@ export function Message({
 
 function BlockDispatch({ block }: { block: Block }): ReactNode {
   const type = block?.type;
-  // Phase B+ populate real renderers per-type. Today the dispatch is a
-  // no-op for everything — the scaffold exists only so blocks wired up
-  // later plug in here instead of growing a new switch.
   switch (type) {
+    case "section":
+      return <SectionBlock block={block as unknown as SectionBlockData} />;
+    case "divider":
+      return <DividerBlock />;
+    case "header":
+      return <HeaderBlock block={block as unknown as HeaderBlockData} />;
+    case "context":
+      return <ContextBlock block={block as unknown as ContextBlockData} />;
+    case "image":
+      return <ImageBlock block={block as unknown as ImageBlockData} />;
     default:
       if (isDev()) {
         // eslint-disable-next-line no-console
