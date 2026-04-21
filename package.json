@@ -1,7 +1,7 @@
 {
   "name": "@tiers-io/slack-blocks-shadcn",
   "description": "shadcn-native, size-configurable Slack Block Kit renderer. Internal fork of themashcodee/slack-blocks-to-jsx.",
-  "version": "0.1.0-alpha.0",
+  "version": "0.2.0",
   "license": "MIT",
   "repository": "https://github.com/tiers-io/slack-blocks-shadcn.git",
   "main": "dist/index.js",
