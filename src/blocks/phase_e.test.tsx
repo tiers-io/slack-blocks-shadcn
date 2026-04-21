@@ -60,27 +60,26 @@ describe("Phase E blocks", () => {
     );
   });
 
-  it("card: renders header + body, does not double-frame", () => {
+  it("card: renders title + body, does not double-frame", () => {
     render(
       <Message
         size="default"
         blocks={[
           {
             type: "card",
-            header: { text: { type: "plain_text", text: "Release v1.2" } },
-            body: {
-              text: {
+            title: { type: "plain_text", text: "Release v1.2" },
+            body: [
+              {
                 type: "mrkdwn",
                 text: "Shipped *auth* + `rate-limit`.",
               },
-            },
+            ],
           },
         ] as Block[]}
       />,
     );
     expect(screen.getByText("Release v1.2")).toBeInTheDocument();
     expect(screen.getByText("auth").tagName).toBe("STRONG");
-    // no nested `data-block="card"` inside our card
     const cards = document.querySelectorAll('[data-block="card"]');
     expect(cards).toHaveLength(1);
   });
@@ -93,18 +92,9 @@ describe("Phase E blocks", () => {
           {
             type: "carousel",
             items: [
-              {
-                type: "card",
-                header: { text: { type: "plain_text", text: "A" } },
-              },
-              {
-                type: "card",
-                header: { text: { type: "plain_text", text: "B" } },
-              },
-              {
-                type: "card",
-                header: { text: { type: "plain_text", text: "C" } },
-              },
+              { type: "card", title: { type: "plain_text", text: "A" } },
+              { type: "card", title: { type: "plain_text", text: "B" } },
+              { type: "card", title: { type: "plain_text", text: "C" } },
             ],
           },
         ] as Block[]}

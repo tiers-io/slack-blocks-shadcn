@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardFooter, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { RenderTextObject } from "../composition/TextObject";
 import { ElementDispatch } from "../elements/dispatch";
 import { cn } from "../utils/cn";
@@ -8,72 +14,83 @@ import type { TextObject, ImageElement } from "../types";
 
 type AnyElement = { type: string; [k: string]: unknown };
 
+// Shape ported from upstream:
+//   title         (TextObject)     — header line
+//   subtitle      (TextObject)     — smaller secondary line under title
+//   body          (TextObject[])   — array of text lines
+//   hero_image    (ImageElement)   — edge-to-edge hero at the top
+//   icon          (ImageElement)   — small icon to the left of title
+//   actions       (elements)       — inline action row in the footer
+//   inCarousel    (boolean)        — when true, lets CarouselBlock know
+//                                   to pick a tighter inner layout.
+
 export interface CardBlockData {
   type: "card";
   block_id?: string;
-  header?: { text?: TextObject; image?: ImageElement };
-  body?: { text?: TextObject; image?: ImageElement; elements?: AnyElement[] };
-  footer?: { elements?: AnyElement[]; text?: TextObject };
+  title?: TextObject;
+  subtitle?: TextObject;
+  body?: TextObject[];
+  hero_image?: ImageElement;
+  icon?: ImageElement;
+  actions?: AnyElement[];
+  inCarousel?: boolean;
 }
 
 export function CardBlock({ block }: { block: CardBlockData }) {
   const size = useSize();
-  const headerImg = block.header?.image;
   return (
-    <Card data-block="card" className={cn(sizing[size].radius)}>
-      {headerImg ? (
+    <Card
+      data-block="card"
+      data-in-carousel={block.inCarousel || undefined}
+      className={cn(sizing[size].radius)}
+    >
+      {block.hero_image ? (
         <img
-          src={headerImg.image_url}
-          alt={headerImg.alt_text}
+          src={block.hero_image.image_url}
+          alt={block.hero_image.alt_text}
           className="block h-40 w-full object-cover"
           loading="lazy"
         />
       ) : null}
-      {block.header?.text ? (
+      {(block.title || block.subtitle || block.icon) ? (
         <CardHeader>
-          <CardTitle>
-            <RenderTextObject text={block.header.text} />
-          </CardTitle>
+          <div className="flex items-center gap-2">
+            {block.icon ? (
+              <img
+                src={block.icon.image_url}
+                alt={block.icon.alt_text}
+                className={cn("shrink-0 rounded-sm", sizing[size].avatar)}
+                loading="lazy"
+              />
+            ) : null}
+            <div className="min-w-0 flex-1">
+              {block.title ? (
+                <CardTitle>
+                  <RenderTextObject text={block.title} />
+                </CardTitle>
+              ) : null}
+              {block.subtitle ? (
+                <div className={cn("text-muted-foreground", sizing[size].secondary)}>
+                  <RenderTextObject text={block.subtitle} />
+                </div>
+              ) : null}
+            </div>
+          </div>
         </CardHeader>
       ) : null}
-      {block.body ? (
-        <CardContent className="flex flex-col gap-2">
-          {block.body.image ? (
-            <img
-              src={block.body.image.image_url}
-              alt={block.body.image.alt_text}
-              className="rounded-md object-cover"
-              loading="lazy"
-            />
-          ) : null}
-          {block.body.text ? (
-            <div className={cn("text-foreground/90", sizing[size].body)}>
-              <RenderTextObject text={block.body.text} />
+      {block.body && block.body.length > 0 ? (
+        <CardContent className={cn("flex flex-col gap-1", sizing[size].body)}>
+          {block.body.map((t, i) => (
+            <div key={i} className="text-foreground/90">
+              <RenderTextObject text={t} />
             </div>
-          ) : null}
-          {block.body.elements && block.body.elements.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {block.body.elements.map((el, i) => (
-                <ElementDispatch key={i} element={el} />
-              ))}
-            </div>
-          ) : null}
+          ))}
         </CardContent>
       ) : null}
-      {block.footer && (block.footer.text || block.footer.elements?.length) ? (
+      {block.actions && block.actions.length > 0 ? (
         <CardFooter className="flex flex-wrap items-center gap-2">
-          {block.footer.text ? (
-            <div
-              className={cn(
-                "text-muted-foreground",
-                sizing[size].secondary,
-              )}
-            >
-              <RenderTextObject text={block.footer.text} />
-            </div>
-          ) : null}
-          {block.footer.elements?.map((el, i) => (
-            <ElementDispatch key={i} element={el} />
+          {block.actions.map((a, i) => (
+            <ElementDispatch key={i} element={a} />
           ))}
         </CardFooter>
       ) : null}
