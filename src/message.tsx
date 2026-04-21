@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useMemo } from "react";
 import { cn } from "./utils/cn";
 import {
   SizeContext,
@@ -10,48 +11,19 @@ import {
 import { sizing } from "./sizing";
 import { isDev } from "./utils/env";
 import {
-  SectionBlock,
-  DividerBlock,
-  HeaderBlock,
-  ContextBlock,
-  ImageBlock,
-  RichTextBlock,
-  ActionsBlock,
-  FileBlock,
-  VideoBlock,
-  MarkdownBlock,
-  AlertBlock,
-  InputBlock,
-  ContextActionsBlock,
-  CardBlock,
-  CarouselBlock,
-  PlanBlock,
-  TaskCardBlock,
-  TableBlock,
-  type TableBlockData,
-  type InputBlockData,
-  type ContextActionsBlockData,
-  type CardBlockData,
-  type CarouselBlockData,
-  type PlanBlockData,
-  type TaskCardBlockData,
-  type SectionBlockData,
-  type HeaderBlockData,
-  type ContextBlockData,
-  type ImageBlockData,
-  type RichTextBlockData,
-  type ActionsBlockData,
-  type FileBlockData,
-  type VideoBlockData,
-  type MarkdownBlockData,
-  type AlertBlockData,
-} from "./blocks";
+  ComponentsContext,
+  DEFAULT_COMPONENTS,
+  OnActionProvider,
+  useComponent,
+  type ComponentOverrides,
+  type OnActionCallback,
+} from "./components-registry";
 import type { Block, BlockSize } from "./types";
 
-// Root render. Threads size/hooks/data through context, then iterates
-// the blocks array. Block dispatch is a thin switch populated phase-by-
-// phase; unknown types fall through with a dev warning and render
-// nothing.
+// Root render. Threads size + hooks + data + components + onAction
+// through context, then iterates the blocks array. Block dispatch is a
+// type-keyed lookup against the registry — every block is swappable
+// from the call site.
 
 export interface MessageProps {
   blocks: Block[];
@@ -59,32 +31,67 @@ export interface MessageProps {
   theme?: "light" | "dark";
   hooks?: Hooks;
   data?: Data;
+  /** Override any default block/element/composition renderer. */
+  components?: Partial<ComponentOverrides>;
+  /** Single callback fired by every interactive element. */
+  onAction?: OnActionCallback;
   /** Kept for parity; always true today (we never render Slack chrome). */
   withoutWrapper?: boolean;
   className?: string;
 }
+
+const BLOCK_KEY: Record<string, keyof ComponentOverrides> = {
+  section: "SectionBlock",
+  divider: "DividerBlock",
+  header: "HeaderBlock",
+  context: "ContextBlock",
+  image: "ImageBlock",
+  rich_text: "RichTextBlock",
+  actions: "ActionsBlock",
+  context_actions: "ContextActionsBlock",
+  file: "FileBlock",
+  video: "VideoBlock",
+  markdown: "MarkdownBlock",
+  alert: "AlertBlock",
+  input: "InputBlock",
+  card: "CardBlock",
+  carousel: "CarouselBlock",
+  plan: "PlanBlock",
+  task_card: "TaskCardBlock",
+  table: "TableBlock",
+};
 
 export function Message({
   blocks,
   size = "default",
   hooks = {},
   data = {},
+  components,
+  onAction,
   className,
 }: MessageProps) {
+  const merged = useMemo<ComponentOverrides>(
+    () => (components ? { ...DEFAULT_COMPONENTS, ...components } : DEFAULT_COMPONENTS),
+    [components],
+  );
   if (!blocks || blocks.length === 0) return null;
   return (
     <SizeContext.Provider value={size}>
       <HooksContext.Provider value={hooks}>
         <DataContext.Provider value={data}>
-          <div
-            data-slot="slack-blocks"
-            data-size={size}
-            className={cn(sizing[size].stack, className)}
-          >
-            {blocks.map((block, i) => (
-              <BlockDispatch key={i} block={block} />
-            ))}
-          </div>
+          <ComponentsContext.Provider value={merged}>
+            <OnActionProvider value={onAction}>
+              <div
+                data-slot="slack-blocks"
+                data-size={size}
+                className={cn(sizing[size].stack, className)}
+              >
+                {blocks.map((block, i) => (
+                  <BlockDispatch key={i} block={block} />
+                ))}
+              </div>
+            </OnActionProvider>
+          </ComponentsContext.Provider>
         </DataContext.Provider>
       </HooksContext.Provider>
     </SizeContext.Provider>
@@ -93,54 +100,23 @@ export function Message({
 
 function BlockDispatch({ block }: { block: Block }): ReactNode {
   const type = block?.type;
-  switch (type) {
-    case "section":
-      return <SectionBlock block={block as unknown as SectionBlockData} />;
-    case "divider":
-      return <DividerBlock />;
-    case "header":
-      return <HeaderBlock block={block as unknown as HeaderBlockData} />;
-    case "context":
-      return <ContextBlock block={block as unknown as ContextBlockData} />;
-    case "image":
-      return <ImageBlock block={block as unknown as ImageBlockData} />;
-    case "rich_text":
-      return <RichTextBlock block={block as unknown as RichTextBlockData} />;
-    case "actions":
-      return <ActionsBlock block={block as unknown as ActionsBlockData} />;
-    case "file":
-      return <FileBlock block={block as unknown as FileBlockData} />;
-    case "video":
-      return <VideoBlock block={block as unknown as VideoBlockData} />;
-    case "markdown":
-      return <MarkdownBlock block={block as unknown as MarkdownBlockData} />;
-    case "alert":
-      return <AlertBlock block={block as unknown as AlertBlockData} />;
-    case "input":
-      return <InputBlock block={block as unknown as InputBlockData} />;
-    case "context_actions":
-      return (
-        <ContextActionsBlock
-          block={block as unknown as ContextActionsBlockData}
-        />
+  const key = BLOCK_KEY[type as keyof typeof BLOCK_KEY];
+  const Component = useComponent(
+    key ?? ("SectionBlock" as keyof ComponentOverrides),
+  );
+  if (!key) {
+    if (isDev()) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[@tiers-io/slack-blocks-shadcn] unsupported block type: ${type}`,
       );
-    case "card":
-      return <CardBlock block={block as unknown as CardBlockData} />;
-    case "carousel":
-      return <CarouselBlock block={block as unknown as CarouselBlockData} />;
-    case "plan":
-      return <PlanBlock block={block as unknown as PlanBlockData} />;
-    case "task_card":
-      return <TaskCardBlock block={block as unknown as TaskCardBlockData} />;
-    case "table":
-      return <TableBlock block={block as unknown as TableBlockData} />;
-    default:
-      if (isDev()) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `[@tiers-io/slack-blocks-shadcn] unsupported block type: ${type}`,
-        );
-      }
-      return null;
+    }
+    return null;
   }
+  // The registry entries accept either `{ block }` or nothing (Divider).
+  // We cast the narrow union away — the runtime payload matches because
+  // our block-type → component-key map is exhaustive.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const C = Component as any;
+  return key === "DividerBlock" ? <C /> : <C block={block} />;
 }
