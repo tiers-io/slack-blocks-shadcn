@@ -1,0 +1,6 @@
+[
+  {
+    "type": "markdown",
+    "text": "## Deploy report\n\n| Service | Status | Region |\n| --- | :---: | ---: |\n| auth | ✅ | us-east-1 |\n| timeline | ✅ | us-east-1 |\n| triage | ⚠️ | eu-west-1 |\n\n- [x] tests green\n- [x] coverage > 90%\n- [ ] announce in #platform\n\n~~deprecated~~ — use the new endpoint instead."
+  }
+]
