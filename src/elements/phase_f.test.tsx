@@ -86,8 +86,8 @@ describe("Phase F: input elements", () => {
     );
     const rows = document.querySelectorAll('[data-element="checkboxes"] li');
     expect(rows).toHaveLength(2);
-    expect(rows[0].getAttribute("data-checked")).toBe("true");
-    expect(rows[1].getAttribute("data-checked")).toBe("false");
+    expect(rows[0]!.getAttribute("data-checked")).toBe("true");
+    expect(rows[1]!.getAttribute("data-checked")).toBe("false");
   });
 
   it("radio_buttons has role=radiogroup with one selected radio", () => {
@@ -106,8 +106,8 @@ describe("Phase F: input elements", () => {
     expect(group).toBeInTheDocument();
     const radios = group.querySelectorAll('[role="radio"]');
     expect(radios).toHaveLength(2);
-    expect(radios[0].getAttribute("aria-checked")).toBe("false");
-    expect(radios[1].getAttribute("aria-checked")).toBe("true");
+    expect(radios[0]!.getAttribute("aria-checked")).toBe("false");
+    expect(radios[1]!.getAttribute("aria-checked")).toBe("true");
   });
 
   it("overflow renders as disabled icon button with aria-label listing options", () => {

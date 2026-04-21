@@ -26,10 +26,12 @@ describe("rich_text", () => {
 
   it("renders a bullet list with three items", () => {
     renderBlocks(mixed);
-    const list = document.querySelector('[data-rich-text="list"][data-style="bullet"]');
-    expect(list).toBeInTheDocument();
-    expect(list!.tagName).toBe("UL");
-    expect(list!.querySelectorAll("li")).toHaveLength(3);
+    const wrapper = document.querySelector(
+      '[data-rich-text="list"][data-style="bullet"]',
+    );
+    expect(wrapper).toBeInTheDocument();
+    expect(wrapper!.querySelector("ul")).toBeInTheDocument();
+    expect(wrapper!.querySelectorAll("li")).toHaveLength(3);
   });
 
   it("renders a quote with a broadcast pill", () => {
@@ -42,11 +44,13 @@ describe("rich_text", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders preformatted code as <pre>", () => {
+  it("renders preformatted code as <code><pre>", () => {
     renderBlocks(mixed);
-    const pre = document.querySelector('[data-rich-text="preformatted"]');
+    const wrapper = document.querySelector('[data-rich-text="preformatted"]');
+    expect(wrapper).toBeInTheDocument();
+    expect(wrapper!.tagName).toBe("CODE");
+    const pre = wrapper!.querySelector("pre");
     expect(pre).toBeInTheDocument();
-    expect(pre!.tagName).toBe("PRE");
     expect(pre!.textContent).toContain("curl");
   });
 
@@ -66,9 +70,164 @@ describe("rich_text", () => {
         ],
       },
     ] as Block[]);
-    const ol = document.querySelector('[data-rich-text="list"][data-style="ordered"]');
-    expect(ol!.tagName).toBe("OL");
-    expect(ol!.querySelectorAll("li")).toHaveLength(2);
+    const wrapper = document.querySelector(
+      '[data-rich-text="list"][data-style="ordered"]',
+    );
+    expect(wrapper!.querySelector("ol")).toBeInTheDocument();
+    expect(wrapper!.querySelectorAll("li")).toHaveLength(2);
+  });
+
+  it("renders ordered list markers — decimal at indent 0, alpha at 1, Roman at 2", () => {
+    renderBlocks([
+      {
+        type: "rich_text",
+        elements: [
+          {
+            type: "rich_text_list",
+            style: "ordered",
+            indent: 0,
+            elements: [
+              { type: "rich_text_section", elements: [{ type: "text", text: "one" }] },
+              { type: "rich_text_section", elements: [{ type: "text", text: "two" }] },
+            ],
+          },
+          {
+            type: "rich_text_list",
+            style: "ordered",
+            indent: 1,
+            elements: [
+              { type: "rich_text_section", elements: [{ type: "text", text: "a" }] },
+              { type: "rich_text_section", elements: [{ type: "text", text: "b" }] },
+            ],
+          },
+          {
+            type: "rich_text_list",
+            style: "ordered",
+            indent: 2,
+            elements: [
+              { type: "rich_text_section", elements: [{ type: "text", text: "i" }] },
+              { type: "rich_text_section", elements: [{ type: "text", text: "ii" }] },
+            ],
+          },
+        ],
+      },
+    ] as Block[]);
+    const wrappers = Array.from(
+      document.querySelectorAll('[data-rich-text="list"][data-style="ordered"]'),
+    );
+    expect(wrappers).toHaveLength(3);
+    const markers = wrappers.map((w) =>
+      Array.from(w.querySelectorAll("li > span")).map((s) => s.textContent),
+    );
+    expect(markers[0]).toEqual(["1.", "2."]);
+    expect(markers[1]).toEqual(["a.", "b."]);
+    expect(markers[2]).toEqual(["i.", "ii."]);
+  });
+
+  it("honours list offset (starts ordered counting at offset+1)", () => {
+    renderBlocks([
+      {
+        type: "rich_text",
+        elements: [
+          {
+            type: "rich_text_list",
+            style: "ordered",
+            offset: 4,
+            elements: [
+              { type: "rich_text_section", elements: [{ type: "text", text: "a" }] },
+              { type: "rich_text_section", elements: [{ type: "text", text: "b" }] },
+            ],
+          },
+        ],
+      },
+    ] as Block[]);
+    const markers = Array.from(
+      document.querySelectorAll('[data-rich-text="list"] li > span'),
+    ).map((s) => s.textContent);
+    expect(markers).toEqual(["5.", "6."]);
+  });
+
+  it("list `border: 1` renders a left-bar", () => {
+    renderBlocks([
+      {
+        type: "rich_text",
+        elements: [
+          {
+            type: "rich_text_list",
+            style: "bullet",
+            border: 1,
+            elements: [
+              { type: "rich_text_section", elements: [{ type: "text", text: "x" }] },
+            ],
+          },
+        ],
+      },
+    ] as Block[]);
+    const wrapper = document.querySelector('[data-rich-text="list"]')!;
+    const bar = wrapper.querySelector('[aria-hidden="true"]');
+    expect(bar).toBeInTheDocument();
+    expect(bar!.className).toContain("w-1");
+  });
+
+  it("preformatted surfaces `language` as data-language + border", () => {
+    renderBlocks([
+      {
+        type: "rich_text",
+        elements: [
+          {
+            type: "rich_text_preformatted",
+            border: 1,
+            language: "python",
+            elements: [{ type: "text", text: "print('ok')" }],
+          },
+        ],
+      },
+    ] as Block[]);
+    const pre = document.querySelector(
+      '[data-rich-text="preformatted"] pre',
+    )!;
+    expect(pre.getAttribute("data-language")).toBe("python");
+  });
+
+  it("text `style.underline` renders as <span class='underline'>", () => {
+    renderBlocks([
+      {
+        type: "rich_text",
+        elements: [
+          {
+            type: "rich_text_section",
+            elements: [
+              { type: "text", text: "underlined", style: { underline: true } },
+            ],
+          },
+        ],
+      },
+    ] as Block[]);
+    const span = screen.getByText("underlined");
+    expect(span.className).toContain("underline");
+  });
+
+  it("link `style.unlink` renders plain text (no <a>)", () => {
+    renderBlocks([
+      {
+        type: "rich_text",
+        elements: [
+          {
+            type: "rich_text_section",
+            elements: [
+              {
+                type: "link",
+                url: "https://example.com",
+                text: "unlinked",
+                style: { unlink: true },
+              },
+            ],
+          },
+        ],
+      },
+    ] as Block[]);
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(screen.getByText("unlinked")).toBeInTheDocument();
   });
 
   it("renders bold/italic/strike/code inline styles distinctly", () => {

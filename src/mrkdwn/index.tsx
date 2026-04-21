@@ -28,11 +28,11 @@ import { useHooks, useData } from "../context";
 // showing `a*b*c` as `a<strong>b</strong>c` but `2 * 3 * 4` as plain.
 
 const TOKEN_SOURCE =
-  "(```[\\s\\S]*?```)|(<[^>\\s][^>]*>)|(`[^`\\n]+`)|(\\*[^*\\n]+\\*)|(_[^_\\n]+_)|(~[^~\\n]+~)|(:[a-z0-9_+-]+:)";
+  "(```[\\s\\S]*?```)|(<[^>\\s][^>]*>)|(`[^`\\n]+`)|(\\*[^*\\n]+\\*)|(__[^_\\n]+__)|(_[^_\\n]+_)|(~[^~\\n]+~)|(:[a-z0-9_+-]+:)";
 
 type RenderedFrag = ReactNode;
 
-function RenderMentionOrLink({ raw }: { raw: string }): JSX.Element | null {
+function RenderMentionOrLink({ raw }: { raw: string }): ReactNode {
   const inner = raw.slice(1, -1);
   if (inner.startsWith("@")) {
     const [id, name] = inner.slice(1).split("|", 2);
@@ -211,6 +211,12 @@ function renderInline(text: string): RenderedFrag[] {
         <em key={`i-${key++}`} className="italic">
           {renderInline(raw.slice(1, -1))}
         </em>,
+      );
+    } else if (raw.startsWith("__")) {
+      out.push(
+        <span key={`u-${key++}`} className="underline">
+          {renderInline(raw.slice(2, -2))}
+        </span>,
       );
     } else if (raw.startsWith("~")) {
       out.push(

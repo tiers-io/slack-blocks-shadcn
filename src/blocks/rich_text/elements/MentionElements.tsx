@@ -11,9 +11,9 @@ import type {
   RichTextBroadcast,
 } from "../types";
 
-function withStyle(node: ReactNode, style: RichTextStyle | undefined): JSX.Element {
+function withStyle(node: ReactNode, style: RichTextStyle | undefined): ReactNode {
   const cls = styleToClass(style);
-  if (!cls) return <>{node}</>;
+  if (!cls) return node;
   return <span className={cn(cls)}>{node}</span>;
 }
 
