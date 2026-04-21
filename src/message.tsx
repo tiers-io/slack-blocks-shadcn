@@ -21,6 +21,18 @@ import {
   VideoBlock,
   MarkdownBlock,
   AlertBlock,
+  InputBlock,
+  ContextActionsBlock,
+  CardBlock,
+  CarouselBlock,
+  PlanBlock,
+  TaskCardBlock,
+  type InputBlockData,
+  type ContextActionsBlockData,
+  type CardBlockData,
+  type CarouselBlockData,
+  type PlanBlockData,
+  type TaskCardBlockData,
   type SectionBlockData,
   type HeaderBlockData,
   type ContextBlockData,
@@ -102,6 +114,22 @@ function BlockDispatch({ block }: { block: Block }): ReactNode {
       return <MarkdownBlock block={block as unknown as MarkdownBlockData} />;
     case "alert":
       return <AlertBlock block={block as unknown as AlertBlockData} />;
+    case "input":
+      return <InputBlock block={block as unknown as InputBlockData} />;
+    case "context_actions":
+      return (
+        <ContextActionsBlock
+          block={block as unknown as ContextActionsBlockData}
+        />
+      );
+    case "card":
+      return <CardBlock block={block as unknown as CardBlockData} />;
+    case "carousel":
+      return <CarouselBlock block={block as unknown as CarouselBlockData} />;
+    case "plan":
+      return <PlanBlock block={block as unknown as PlanBlockData} />;
+    case "task_card":
+      return <TaskCardBlock block={block as unknown as TaskCardBlockData} />;
     default:
       if (isDev()) {
         // eslint-disable-next-line no-console
