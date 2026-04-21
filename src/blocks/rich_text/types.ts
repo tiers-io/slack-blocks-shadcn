@@ -6,8 +6,14 @@ export interface RichTextStyle {
   bold?: boolean;
   italic?: boolean;
   strike?: boolean;
+  underline?: boolean;
   code?: boolean;
-  unlink?: boolean; // applies to links: render visually but no href
+  /** Mention-only: renders with a highlighted background (Slack's search-highlight semantics). */
+  highlight?: boolean;
+  /** Mention-only: client-side search highlight (tiers-native styling). */
+  client_highlight?: boolean;
+  /** Link-only: render the text but disable the href. */
+  unlink?: boolean;
 }
 
 export interface RichTextText {
@@ -61,6 +67,7 @@ export interface RichTextDate {
   format?: string;
   url?: string;
   fallback?: string;
+  style?: RichTextStyle;
 }
 
 export interface RichTextColor {

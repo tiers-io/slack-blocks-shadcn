@@ -1,4 +1,6 @@
+import { cn } from "../../../utils/cn";
 import { useHooks } from "../../../context";
+import { styleToClass } from "./style";
 import type { RichTextDate } from "../types";
 
 // Date elements carry a Slack date-format token string (e.g. `{date_short}`),
@@ -16,17 +18,15 @@ function defaultFormat(timestamp: number | string, fallback?: string): string {
 export function DateElement({ element }: { element: RichTextDate }) {
   const hooks = useHooks();
   const fallback = defaultFormat(element.timestamp, element.fallback);
-  if (hooks.date) {
-    return (
-      <>
-        {hooks.date({
-          timestamp: String(element.timestamp),
-          format: element.format ?? "",
-          link: element.url ?? null,
-          fallback,
-        })}
-      </>
-    );
-  }
-  return <>{fallback}</>;
+  const styleCls = styleToClass(element.style);
+  const content = hooks.date
+    ? hooks.date({
+        timestamp: String(element.timestamp),
+        format: element.format ?? "",
+        link: element.url ?? null,
+        fallback,
+      })
+    : fallback;
+  if (!styleCls) return <>{content}</>;
+  return <span className={cn(styleCls)}>{content}</span>;
 }
