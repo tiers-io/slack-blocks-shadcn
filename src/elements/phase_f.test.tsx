@@ -43,11 +43,11 @@ describe("Phase F: input elements", () => {
     expect(el).toBeDisabled();
   });
 
-  it("rich_text_input renders a disabled multi-line textarea", () => {
+  it("rich_text_input renders an editable multi-line textarea", () => {
     render(wrap({ type: "rich_text_input", action_id: "x" }));
     const el = document.querySelector('textarea[data-element="rich_text_input"]');
     expect(el).toBeInTheDocument();
-    expect(el).toBeDisabled();
+    expect(el).not.toBeDisabled();
   });
 
   it("datepicker shows initial_date label (and is interactive)", () => {
@@ -110,7 +110,7 @@ describe("Phase F: input elements", () => {
     expect(radios[1]!.getAttribute("aria-checked")).toBe("true");
   });
 
-  it("overflow renders as disabled icon button with aria-label listing options", () => {
+  it("overflow renders as an interactive icon button with aria-haspopup menu", () => {
     render(
       wrap({
         type: "overflow",
@@ -122,8 +122,9 @@ describe("Phase F: input elements", () => {
       }),
     );
     const btn = document.querySelector('[data-element="overflow"]');
-    expect(btn).toBeDisabled();
-    expect(btn!.getAttribute("aria-label")).toContain("Edit, Delete");
+    expect(btn).not.toBeDisabled();
+    expect(btn!.getAttribute("aria-haspopup")).toBe("menu");
+    expect(btn!.getAttribute("aria-label")).toBe("Overflow menu");
   });
 
   it("file_input + url_source render disabled with their labels", () => {
