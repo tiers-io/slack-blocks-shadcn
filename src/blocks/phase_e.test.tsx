@@ -4,7 +4,7 @@ import { Message } from "../message";
 import type { Block } from "../types";
 
 describe("Phase E blocks", () => {
-  it("input: renders label + disabled element + hint", () => {
+  it("input: renders label + nested interactive element + hint", () => {
     render(
       <Message
         size="default"
@@ -16,6 +16,9 @@ describe("Phase E blocks", () => {
               type: "static_select",
               action_id: "team",
               placeholder: { text: "Choose a team" },
+              options: [
+                { text: { type: "plain_text", text: "Platform" }, value: "p" },
+              ],
             },
             hint: { type: "plain_text", text: "You can change this later" },
           },
@@ -23,9 +26,7 @@ describe("Phase E blocks", () => {
       />,
     );
     expect(screen.getByText("Team").tagName).toBe("LABEL");
-    expect(
-      document.querySelector('[data-element="static_select"]'),
-    ).toBeDisabled();
+    expect(screen.getByText("Choose a team")).toBeInTheDocument();
     expect(
       screen.getByText("You can change this later"),
     ).toBeInTheDocument();

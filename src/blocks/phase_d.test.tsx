@@ -52,7 +52,7 @@ describe("Phase D blocks", () => {
       expect(btn.className).toContain("bg-destructive");
     });
 
-    it("renders select elements with chevron + placeholder", () => {
+    it("renders select elements with chevron + placeholder (interactive)", () => {
       render(
         <Message
           size="default"
@@ -64,6 +64,9 @@ describe("Phase D blocks", () => {
                   type: "static_select",
                   action_id: "x",
                   placeholder: { text: "Pick one" },
+                  options: [
+                    { text: { type: "plain_text", text: "A" }, value: "a" },
+                  ],
                 },
               ],
             },
@@ -71,9 +74,10 @@ describe("Phase D blocks", () => {
         />,
       );
       expect(screen.getByText("Pick one")).toBeInTheDocument();
-      expect(
-        document.querySelector('[data-element="static_select"]'),
-      ).toBeDisabled();
+      const trigger = screen.getByRole("button", { name: /Pick one/ });
+      expect(trigger).toHaveAttribute("aria-expanded", "false");
+      expect(trigger).toHaveAttribute("aria-haspopup", "listbox");
+      expect(trigger).not.toBeDisabled();
     });
   });
 
