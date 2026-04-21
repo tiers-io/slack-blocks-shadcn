@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode } from "react";
-import emoji from "node-emoji";
+import { get as getEmoji } from "node-emoji";
 import { MentionPill } from "../composition/MentionPill";
 import { InlineLink } from "../composition/InlineLink";
 import { useHooks, useData } from "../context";
@@ -27,8 +27,8 @@ import { useHooks, useData } from "../context";
 // whitespace boundaries awkwardly — this matches Slack's behaviour of
 // showing `a*b*c` as `a<strong>b</strong>c` but `2 * 3 * 4` as plain.
 
-const TOKEN_RE =
-  /(```[\s\S]*?```)|(<[^>\s][^>]*>)|(`[^`\n]+`)|(\*[^*\n]+\*)|(_[^_\n]+_)|(~[^~\n]+~)|(:[a-z0-9_+-]+:)/gi;
+const TOKEN_SOURCE =
+  "(```[\\s\\S]*?```)|(<[^>\\s][^>]*>)|(`[^`\\n]+`)|(\\*[^*\\n]+\\*)|(_[^_\\n]+_)|(~[^~\\n]+~)|(:[a-z0-9_+-]+:)";
 
 type RenderedFrag = ReactNode;
 
@@ -159,7 +159,7 @@ function DateMention({
 function EmojiToken({ raw }: { raw: string }) {
   const hooks = useHooks();
   const name = raw.slice(1, -1);
-  const parse = (d: { name: string }) => emoji.get(d.name) ?? `:${d.name}:`;
+  const parse = (d: { name: string }) => getEmoji(d.name) ?? `:${d.name}:`;
   if (hooks.emoji) return <>{hooks.emoji({ name }, parse)}</>;
   return <>{parse({ name })}</>;
 }
@@ -168,9 +168,11 @@ function renderInline(text: string): RenderedFrag[] {
   const out: RenderedFrag[] = [];
   let last = 0;
   let key = 0;
-  TOKEN_RE.lastIndex = 0;
+  // Fresh regex per call — sharing one /g regex across recursive calls
+  // clobbers lastIndex and produces an infinite loop on nested emphasis.
+  const re = new RegExp(TOKEN_SOURCE, "gi");
   let m: RegExpExecArray | null;
-  while ((m = TOKEN_RE.exec(text))) {
+  while ((m = re.exec(text))) {
     if (m.index > last) out.push(text.slice(last, m.index));
     const raw = m[0];
     if (raw.startsWith("```")) {
