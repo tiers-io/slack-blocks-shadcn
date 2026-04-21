@@ -1,0 +1,20 @@
+import React, { ComponentPropsWithoutRef } from "react";
+import { RichTextList } from "../../../types";
+
+type Props = ComponentPropsWithoutRef<"ul"> & {
+  element: RichTextList;
+};
+
+export const RichTextListWrapper = (props: Props) => {
+  const { element, children, ...rest } = props;
+
+  if (element.style === "bullet") {
+    return <ul {...rest}>{children}</ul>;
+  }
+
+  return (
+    <ol start={element.offset != null ? element.offset + 1 : undefined} {...rest}>
+      {children}
+    </ol>
+  );
+};
