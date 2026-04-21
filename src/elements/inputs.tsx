@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { useOnAction } from "../components-registry";
 
 // The five text-ish inputs. All render disabled — we surface the initial
 // value (or placeholder) so the Slack message is still legible without
@@ -103,13 +105,25 @@ export function RichTextInputElement({
 }: {
   element: RichTextInputData;
 }) {
+  // Upstream ships a lightweight rich-text editor. We use a shadcn
+  // `<Textarea>` with mrkdwn emission; a Tiptap-backed WYSIWYG is a
+  // separate follow-up (tracked in the plan file). Editing fires
+  // `onAction` on blur with the raw mrkdwn value.
+  const onAction = useOnAction();
+  const [value, setValue] = useState(element.initial_value ?? "");
   return (
     <Textarea
-      disabled
       data-element="rich_text_input"
-      aria-disabled="true"
       placeholder={element.placeholder?.text ?? "Write…"}
-      defaultValue={element.initial_value}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onBlur={() => {
+        onAction?.({
+          type: "rich_text_input",
+          action_id: element.action_id,
+          value,
+        });
+      }}
       rows={3}
     />
   );
