@@ -1,26 +1,32 @@
+import { useState } from "react";
 import { RenderTextObject } from "../composition/TextObject";
+import { ElementDispatch } from "../elements/dispatch";
 import { sizing } from "../sizing";
 import { useSize } from "../context";
 import { cn } from "../utils/cn";
 import type { ImageElement, TextObject } from "../types";
 
-// Section is the most common block. It carries one text and optionally a
-// field grid + an accessory. Accessories that aren't images fall back to
-// a small "Open in Slack" placeholder — full interactive elements come in
-// Phase D.
+// Section is the most common block. One text + optional fields grid +
+// optional accessory (image OR any interactive element). When `expand`
+// is false, long text truncates to 3 lines with a local "show more"
+// toggle — matches upstream `section.tsx` collapsed-default behaviour.
 
 export interface SectionBlockData {
   type: "section";
   block_id?: string;
   text?: TextObject;
   fields?: TextObject[];
-  accessory?: (ImageElement | { type: string; [k: string]: unknown });
+  accessory?: ImageElement | { type: string; [k: string]: unknown };
+  /** When false (upstream default on long text), truncate to 3 lines. */
+  expand?: boolean;
 }
 
 export function SectionBlock({ block }: { block: SectionBlockData }) {
   const size = useSize();
   const acc = block.accessory;
   const accessoryIsImage = acc?.type === "image";
+  const canCollapse = block.expand === false;
+  const [expanded, setExpanded] = useState(!canCollapse);
   return (
     <div
       data-block="section"
@@ -28,9 +34,23 @@ export function SectionBlock({ block }: { block: SectionBlockData }) {
     >
       <div className="min-w-0 flex-1 break-words">
         {block.text ? (
-          <div>
-            <RenderTextObject text={block.text} />
-          </div>
+          <>
+            <div className={cn(!expanded && "line-clamp-3")}>
+              <RenderTextObject text={block.text} />
+            </div>
+            {canCollapse ? (
+              <button
+                type="button"
+                onClick={() => setExpanded((v) => !v)}
+                className={cn(
+                  "mt-1 text-primary hover:underline",
+                  sizing[size].secondary,
+                )}
+              >
+                {expanded ? "Show less" : "Show more"}
+              </button>
+            ) : null}
+          </>
         ) : null}
         {block.fields && block.fields.length > 0 ? (
           <div className="mt-2 grid grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2">
@@ -52,6 +72,10 @@ export function SectionBlock({ block }: { block: SectionBlockData }) {
           )}
           loading="lazy"
         />
+      ) : acc ? (
+        <div className="shrink-0">
+          <ElementDispatch element={acc as { type: string; [k: string]: unknown }} />
+        </div>
       ) : null}
     </div>
   );
