@@ -15,10 +15,12 @@ import {
   HeaderBlock,
   ContextBlock,
   ImageBlock,
+  RichTextBlock,
   type SectionBlockData,
   type HeaderBlockData,
   type ContextBlockData,
   type ImageBlockData,
+  type RichTextBlockData,
 } from "./blocks";
 import type { Block, BlockSize } from "./types";
 
@@ -78,6 +80,8 @@ function BlockDispatch({ block }: { block: Block }): ReactNode {
       return <ContextBlock block={block as unknown as ContextBlockData} />;
     case "image":
       return <ImageBlock block={block as unknown as ImageBlockData} />;
+    case "rich_text":
+      return <RichTextBlock block={block as unknown as RichTextBlockData} />;
     default:
       if (isDev()) {
         // eslint-disable-next-line no-console
