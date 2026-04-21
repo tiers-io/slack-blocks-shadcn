@@ -1,0 +1,15 @@
+[
+  {
+    "type": "section",
+    "text": {
+      "type": "mrkdwn",
+      "text": "*Incident resolved.* Elapsed: 37m. Service restored across all regions."
+    },
+    "fields": [
+      { "type": "mrkdwn", "text": "*Severity*\nSEV-2" },
+      { "type": "mrkdwn", "text": "*Owner*\n<@U07J6UD0MQ8>" },
+      { "type": "mrkdwn", "text": "*Region*\nus-east-1" },
+      { "type": "mrkdwn", "text": "*Started*\n2026-04-20 14:03 UTC" }
+    ]
+  }
+]

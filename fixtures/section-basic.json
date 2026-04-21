@@ -1,0 +1,9 @@
+[
+  {
+    "type": "section",
+    "text": {
+      "type": "mrkdwn",
+      "text": "*Build succeeded* for `main` — <https://ci.example/build/4821|view build>"
+    }
+  }
+]

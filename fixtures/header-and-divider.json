@@ -1,0 +1,5 @@
+[
+  { "type": "header", "text": { "type": "plain_text", "text": "Weekly deploys", "emoji": false } },
+  { "type": "divider" },
+  { "type": "section", "text": { "type": "mrkdwn", "text": "_No production deploys last week._" } }
+]

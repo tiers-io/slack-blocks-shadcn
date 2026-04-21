@@ -1,0 +1,8 @@
+[
+  {
+    "type": "image",
+    "image_url": "https://images.example.com/charts/weekly-active.png",
+    "alt_text": "Weekly active users chart",
+    "title": { "type": "plain_text", "text": "Weekly active users — +8% WoW" }
+  }
+]
