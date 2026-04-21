@@ -127,12 +127,12 @@ describe("Phase D blocks", () => {
   });
 
   describe("markdown", () => {
-    it("parses mrkdwn inline styles", () => {
+    it("parses full markdown (double-star bold + inline code)", () => {
       render(
         <Message
           size="default"
           blocks={[
-            { type: "markdown", text: "Deploy *succeeded* for `main`." },
+            { type: "markdown", text: "Deploy **succeeded** for `main`." },
           ] as Block[]}
         />,
       );
