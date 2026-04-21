@@ -40,6 +40,7 @@ export interface PlainTextObject {
 export interface MrkdwnTextObject {
   type: "mrkdwn";
   text: string;
+  /** When true, skip Slack-specific mrkdwn parsing — show the text literally. */
   verbatim?: boolean;
 }
 

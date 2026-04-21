@@ -6,53 +6,44 @@ import { sizing } from "../sizing";
 import { useSize } from "../context";
 import type { TextObject } from "../types";
 
-export type TaskStatus =
-  | "todo"
-  | "in_progress"
-  | "blocked"
-  | "done"
-  | "cancelled";
+// Upstream TaskCard status: `pending | in_progress | complete | error`.
+// We match exactly.
+
+export type TaskStatus = "pending" | "in_progress" | "complete" | "error";
+
+export interface TaskCardSource {
+  title?: string;
+  url?: string;
+}
 
 export interface TaskCardBlockData {
   type: "task_card";
   block_id?: string;
+  task_id?: string;
   title: TextObject;
-  body?: TextObject;
+  details?: TextObject;
+  output?: TextObject;
+  sources?: TaskCardSource[];
   status?: TaskStatus;
-  assignee?: string;
-  priority?: "low" | "medium" | "high" | "urgent";
-  due?: string;
 }
 
-// Maps Slack's task status → a dotted Badge variant + colour token. Keeps
-// the card's framing neutral so the badge carries the status signal.
-
 const STATUS_DOT: Record<TaskStatus, string> = {
-  todo: "bg-muted-foreground",
+  pending: "bg-muted-foreground",
   in_progress: "bg-amber-500",
-  blocked: "bg-destructive",
-  done: "bg-emerald-500",
-  cancelled: "bg-muted",
+  complete: "bg-emerald-500",
+  error: "bg-destructive",
 };
 
 const STATUS_LABEL: Record<TaskStatus, string> = {
-  todo: "To do",
+  pending: "Pending",
   in_progress: "In progress",
-  blocked: "Blocked",
-  done: "Done",
-  cancelled: "Cancelled",
-};
-
-const PRIORITY_COLOR: Record<NonNullable<TaskCardBlockData["priority"]>, string> = {
-  low: "text-muted-foreground",
-  medium: "text-foreground",
-  high: "text-amber-600 dark:text-amber-400",
-  urgent: "text-destructive",
+  complete: "Complete",
+  error: "Error",
 };
 
 export function TaskCardBlock({ block }: { block: TaskCardBlockData }) {
   const size = useSize();
-  const status = block.status ?? "todo";
+  const status = block.status ?? "pending";
   return (
     <Card data-block="task_card" data-status={status}>
       <CardHeader className="flex flex-row items-start justify-between gap-2">
@@ -70,27 +61,40 @@ export function TaskCardBlock({ block }: { block: TaskCardBlockData }) {
           {STATUS_LABEL[status]}
         </Badge>
       </CardHeader>
-      {block.body ? (
+      {block.details ? (
         <CardContent
           className={cn("text-muted-foreground", sizing[size].secondary)}
         >
-          <RenderTextObject text={block.body} />
+          <RenderTextObject text={block.details} />
         </CardContent>
       ) : null}
-      {(block.assignee || block.priority || block.due) ? (
+      {block.output ? (
+        <CardContent className={cn("text-foreground/90", sizing[size].body)}>
+          <RenderTextObject text={block.output} />
+        </CardContent>
+      ) : null}
+      {block.sources && block.sources.length > 0 ? (
         <CardContent
           className={cn(
             "flex flex-wrap items-center gap-3 text-muted-foreground",
             sizing[size].secondary,
           )}
         >
-          {block.assignee ? <span>@{block.assignee}</span> : null}
-          {block.priority ? (
-            <span className={PRIORITY_COLOR[block.priority]}>
-              ↑ {block.priority}
-            </span>
-          ) : null}
-          {block.due ? <span>due {block.due}</span> : null}
+          {block.sources.map((s, i) =>
+            s.url ? (
+              <a
+                key={i}
+                href={s.url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary hover:underline"
+              >
+                {s.title ?? s.url}
+              </a>
+            ) : (
+              <span key={i}>{s.title}</span>
+            ),
+          )}
         </CardContent>
       ) : null}
     </Card>

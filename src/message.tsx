@@ -27,6 +27,8 @@ import {
   CarouselBlock,
   PlanBlock,
   TaskCardBlock,
+  TableBlock,
+  type TableBlockData,
   type InputBlockData,
   type ContextActionsBlockData,
   type CardBlockData,
@@ -130,6 +132,8 @@ function BlockDispatch({ block }: { block: Block }): ReactNode {
       return <PlanBlock block={block as unknown as PlanBlockData} />;
     case "task_card":
       return <TaskCardBlock block={block as unknown as TaskCardBlockData} />;
+    case "table":
+      return <TableBlock block={block as unknown as TableBlockData} />;
     default:
       if (isDev()) {
         // eslint-disable-next-line no-console

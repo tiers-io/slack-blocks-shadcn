@@ -13,5 +13,13 @@ export { InputBlock, type InputBlockData } from "./input";
 export { ContextActionsBlock, type ContextActionsBlockData } from "./context_actions";
 export { CardBlock, type CardBlockData } from "./card";
 export { CarouselBlock, type CarouselBlockData } from "./carousel";
-export { PlanBlock, type PlanBlockData, type PlanItem, type PlanItemStatus } from "./plan";
+export { PlanBlock, type PlanBlockData } from "./plan";
 export { TaskCardBlock, type TaskCardBlockData, type TaskStatus } from "./task_card";
+export {
+  TableBlock,
+  type TableBlockData,
+  type TableCell,
+  type TableCellRawText,
+  type TableCellRichText,
+  type TableColumnSetting,
+} from "./table";

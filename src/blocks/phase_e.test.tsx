@@ -60,27 +60,26 @@ describe("Phase E blocks", () => {
     );
   });
 
-  it("card: renders header + body, does not double-frame", () => {
+  it("card: renders title + body, does not double-frame", () => {
     render(
       <Message
         size="default"
         blocks={[
           {
             type: "card",
-            header: { text: { type: "plain_text", text: "Release v1.2" } },
-            body: {
-              text: {
+            title: { type: "plain_text", text: "Release v1.2" },
+            body: [
+              {
                 type: "mrkdwn",
                 text: "Shipped *auth* + `rate-limit`.",
               },
-            },
+            ],
           },
         ] as Block[]}
       />,
     );
     expect(screen.getByText("Release v1.2")).toBeInTheDocument();
     expect(screen.getByText("auth").tagName).toBe("STRONG");
-    // no nested `data-block="card"` inside our card
     const cards = document.querySelectorAll('[data-block="card"]');
     expect(cards).toHaveLength(1);
   });
@@ -93,18 +92,9 @@ describe("Phase E blocks", () => {
           {
             type: "carousel",
             items: [
-              {
-                type: "card",
-                header: { text: { type: "plain_text", text: "A" } },
-              },
-              {
-                type: "card",
-                header: { text: { type: "plain_text", text: "B" } },
-              },
-              {
-                type: "card",
-                header: { text: { type: "plain_text", text: "C" } },
-              },
+              { type: "card", title: { type: "plain_text", text: "A" } },
+              { type: "card", title: { type: "plain_text", text: "B" } },
+              { type: "card", title: { type: "plain_text", text: "C" } },
             ],
           },
         ] as Block[]}
@@ -115,7 +105,7 @@ describe("Phase E blocks", () => {
     expect(track.querySelectorAll('[data-block="card"]')).toHaveLength(3);
   });
 
-  it("plan: shows progress badge + per-item status icons", () => {
+  it("plan: renders title + task cards from `tasks` array (upstream shape)", () => {
     render(
       <Message
         size="default"
@@ -123,32 +113,36 @@ describe("Phase E blocks", () => {
           {
             type: "plan",
             title: { type: "plain_text", text: "Launch checklist" },
-            items: [
+            tasks: [
               {
+                type: "task_card",
                 title: { type: "plain_text", text: "Write tests" },
-                status: "done",
+                status: "complete",
               },
               {
+                type: "task_card",
                 title: { type: "plain_text", text: "Bump version" },
                 status: "in_progress",
               },
               {
+                type: "task_card",
                 title: { type: "plain_text", text: "Announce" },
-                status: "todo",
+                status: "pending",
               },
             ],
           },
         ] as Block[]}
       />,
     );
-    expect(screen.getByText("1/3")).toBeInTheDocument();
-    const statuses = Array.from(
-      document.querySelectorAll("[data-plan-status]"),
-    ).map((el) => el.getAttribute("data-plan-status"));
-    expect(statuses).toEqual(["done", "in_progress", "todo"]);
+    expect(screen.getByText("Launch checklist")).toBeInTheDocument();
+    const cards = document.querySelectorAll('[data-block="task_card"]');
+    expect(cards).toHaveLength(3);
+    expect(cards[0]!.getAttribute("data-status")).toBe("complete");
+    expect(cards[1]!.getAttribute("data-status")).toBe("in_progress");
+    expect(cards[2]!.getAttribute("data-status")).toBe("pending");
   });
 
-  it("task_card: renders status badge + dot, picks correct colour", () => {
+  it("task_card: renders status badge + dot with upstream status enum", () => {
     render(
       <Message
         size="default"
@@ -156,24 +150,21 @@ describe("Phase E blocks", () => {
           {
             type: "task_card",
             title: { type: "plain_text", text: "Ship auth fix" },
-            status: "blocked",
-            priority: "urgent",
-            assignee: "alex",
-            due: "2026-04-30",
+            status: "error",
+            details: { type: "plain_text", text: "Something broke" },
+            sources: [{ title: "run log", url: "https://ci.example/run/42" }],
           },
         ] as Block[]}
       />,
     );
     const card = document.querySelector('[data-block="task_card"]')!;
-    expect(card.getAttribute("data-status")).toBe("blocked");
-    expect(screen.getByText("Blocked")).toBeInTheDocument();
+    expect(card.getAttribute("data-status")).toBe("error");
+    expect(screen.getByText("Error")).toBeInTheDocument();
     expect(
-      card.querySelector('[data-status-dot="blocked"]')!.className,
+      card.querySelector('[data-status-dot="error"]')!.className,
     ).toContain("bg-destructive");
-    expect(screen.getByText("@alex")).toBeInTheDocument();
-    expect(screen.getByText("↑ urgent").className).toContain(
-      "text-destructive",
-    );
-    expect(screen.getByText("due 2026-04-30")).toBeInTheDocument();
+    expect(screen.getByText("Something broke")).toBeInTheDocument();
+    const link = screen.getByText("run log").closest("a")!;
+    expect(link.getAttribute("href")).toBe("https://ci.example/run/42");
   });
 });
