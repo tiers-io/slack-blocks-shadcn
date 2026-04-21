@@ -4,3 +4,8 @@ export { HeaderBlock, type HeaderBlockData } from "./header";
 export { ContextBlock, type ContextBlockData, type ContextElement } from "./context";
 export { ImageBlock, type ImageBlockData } from "./image";
 export { RichTextBlock, type RichTextBlockData } from "./rich_text";
+export { ActionsBlock, type ActionsBlockData } from "./actions";
+export { FileBlock, type FileBlockData } from "./file";
+export { VideoBlock, type VideoBlockData } from "./video";
+export { MarkdownBlock, type MarkdownBlockData } from "./markdown";
+export { AlertBlock, type AlertBlockData, type AlertLevel } from "./alert";
