@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Button } from "../ui/button";
 import type { PlainTextObject } from "../types";
 import { useSize } from "../context";
+import { useComponent, useOnAction } from "../components-registry";
 import { cn } from "../utils/cn";
+import type { ConfirmDialogSpec } from "../composition/ConfirmDialog";
 
 // Shared wrapper for every button-ish element type. Maps Slack's `style`
 // field to one of our Button variants, uses our size context to pick a
@@ -29,14 +32,34 @@ export interface ButtonElementData {
   value?: string;
   style?: SlackButtonStyle;
   accessibility_label?: string;
+  confirm?: ConfirmDialogSpec;
 }
 
 export function ButtonElement({ element }: { element: ButtonElementData }) {
   const size = useSize();
+  const onAction = useOnAction();
+  const ConfirmDialog = useComponent("ConfirmDialog");
+  const [pending, setPending] = useState(false);
   const variant = mapVariant(element.style);
   const uiSize = mapSize(size);
   const label = element.text.text;
   const aria = element.accessibility_label ?? label;
+
+  const fire = () => {
+    onAction?.({
+      type: "button",
+      action_id: element.action_id,
+      value: element.value,
+    });
+  };
+
+  const onClick = () => {
+    if (element.confirm) {
+      setPending(true);
+      return;
+    }
+    fire();
+  };
 
   if (element.url) {
     // Render as an anchor styled with Button classes — keeps keyboard /
@@ -68,15 +91,29 @@ export function ButtonElement({ element }: { element: ButtonElementData }) {
     );
   }
   return (
-    <Button
-      variant={variant}
-      size={uiSize}
-      disabled
-      data-element="button"
-      aria-label={aria}
-      title="Open in Slack to respond"
-    >
-      {label}
-    </Button>
+    <>
+      <Button
+        type="button"
+        variant={variant}
+        size={uiSize}
+        data-element="button"
+        aria-label={aria}
+        onClick={onClick}
+      >
+        {label}
+      </Button>
+      {element.confirm ? (
+        <ConfirmDialog
+          open={pending}
+          onOpenChange={(v) => !v && setPending(false)}
+          spec={element.confirm}
+          onConfirm={() => {
+            fire();
+            setPending(false);
+          }}
+          onDeny={() => setPending(false)}
+        />
+      ) : null}
+    </>
   );
 }

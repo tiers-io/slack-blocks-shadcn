@@ -26,14 +26,10 @@ const parser = new YozoraParser()
   .useTokenizer(new SlackDateTokenizer())
   .useTokenizer(new SlackEmojiTokenizer());
 
-function isValidURL(s: string): boolean {
-  try {
-    new URL(s);
-    return true;
-  } catch {
-    return false;
-  }
-}
+// These Slack-specific `<...>` forms have their own tokenizers and must
+// NOT be rewritten into markdown links here.
+const SLACK_RESERVED_LINK_PREFIX =
+  /^(!date\^|!subteam\^|!here|!channel|!everyone|@[UW][A-Z0-9]|#[CG][A-Z0-9])/;
 
 export function renderMrkdwn(markdown: string): ReactNode {
   if (!markdown) return null;
@@ -45,13 +41,17 @@ export function renderMrkdwn(markdown: string): ReactNode {
   text = text.replace(/(?<!\*)\*(?!\*)([^*]+)\*(?!\*)/g, "**$1**");
   // Slack uses single ~ for strike — convert to ~~.
   text = text.replace(/(?<!~)~(?!~)([^~]+)~(?!~)/g, "~~$1~~");
-  // <url|label>  →  [label](url)  (preserving Slack-date and non-urls).
-  text = text.replace(/<(?!(?:!date))([^|>]+)\|([^>]+)>/g, (match, link, label) => {
-    return isValidURL(link) ? `[${label}](${link})` : match;
+  // <url|label>  →  [label](url)  for any URL-shaped token.
+  // Slack treats <X|Y> as a link whether or not X parses as a real URL
+  // (e.g. docs and Block Kit Builder use `fakeLink.toUser.com`).
+  text = text.replace(/<([^|>]+)\|([^>]+)>/g, (m, link, label) => {
+    if (SLACK_RESERVED_LINK_PREFIX.test(link)) return m;
+    return `[${label}](${link})`;
   });
-  // <url>  →  [url](url)  (preserving Slack-date and non-urls).
-  text = text.replace(/<(?!(?:!date))([^|>]+)>/g, (match, link) => {
-    return isValidURL(link) ? `[${link}](${link})` : match;
+  // <url>  →  [url](url) — same relaxation.
+  text = text.replace(/<([^|>]+)>/g, (m, link) => {
+    if (SLACK_RESERVED_LINK_PREFIX.test(link)) return m;
+    return `[${link}](${link})`;
   });
   // Prevent _ underscore emphasis from swallowing a line break.
   text = text.replace(/_\n/g, "_ \n");

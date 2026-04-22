@@ -1,15 +1,17 @@
 import { Button } from "../ui/button";
 import { useSize } from "../context";
+import { useOnAction } from "../components-registry";
 
-// Icon button: purely visual round-trip would need a rich icon name
-// mapping. For now we render a square disabled button with the
-// accessibility label as tooltip/aria.
+// Icon button: shown as a compact outline square. Slack exposes an
+// `icon` string that names an SVG; we don't ship that sprite, so we
+// render a minimal glyph and rely on the accessibility label.
 
 export interface IconButtonElementData {
   type: "icon_button";
   action_id: string;
   icon: string;
   url?: string;
+  text?: { type: "plain_text"; text: string };
   accessibility_label?: string;
 }
 
@@ -19,9 +21,11 @@ export function IconButtonElement({
   element: IconButtonElementData;
 }) {
   const size = useSize();
+  const onAction = useOnAction();
   const uiSize =
     size === "sm" ? "icon-xs" : size === "lg" ? "icon" : "icon-sm";
-  const aria = element.accessibility_label ?? element.icon;
+  const aria =
+    element.accessibility_label ?? element.text?.text ?? element.icon;
   if (element.url) {
     return (
       <a
@@ -39,12 +43,18 @@ export function IconButtonElement({
   }
   return (
     <Button
+      type="button"
       size={uiSize}
       variant="outline"
-      disabled
       aria-label={aria}
-      title="Open in Slack to respond"
+      title={aria}
       data-element="icon_button"
+      onClick={() =>
+        onAction?.({
+          type: "icon_button",
+          action_id: element.action_id,
+        })
+      }
     >
       <span aria-hidden>·</span>
     </Button>
