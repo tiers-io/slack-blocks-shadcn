@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import YozoraParser from "@yozora/parser";
+import { get as getEmoji } from "node-emoji";
 import { Blockquote, Code, Paragraph } from "./elements";
 import {
   SlackBroadcastTokenizer,
@@ -10,6 +11,11 @@ import {
   SlackUserMentionTokenizer,
 } from "./tokenizers";
 import type { MarkdownElement } from "./ast-types";
+
+function skinToneModifier(tone: number): string | null {
+  if (tone < 2 || tone > 6) return null;
+  return String.fromCodePoint(0x1f3f9 + tone);
+}
 
 // Ported from upstream `utils/markdown_parser/parser.tsx`. Yozora-based
 // parser seeded with the six custom Slack tokenizers. The default list
@@ -35,6 +41,18 @@ export function renderMrkdwn(markdown: string): ReactNode {
   if (!markdown) return null;
   let text = markdown;
 
+  // Combine `:emoji::skin-tone-N:` into a single glyph+modifier run so
+  // Slack's Fitzpatrick skin-tone markers render attached to the base
+  // emoji instead of showing as trailing `:skin-tone-2:` text.
+  text = text.replace(
+    /:([a-zA-Z0-9_+\-']+)::skin-tone-([2-6]):/g,
+    (match, name, toneStr) => {
+      const base = getEmoji(name);
+      const mod = skinToneModifier(Number(toneStr));
+      if (!base || !mod) return match;
+      return base + mod;
+    },
+  );
   // Transform ``` fences so Yozora treats them as full code blocks.
   text = text.replace(/```/g, `\n\`\`\`\n`);
   // Slack uses single * for bold — convert to **.

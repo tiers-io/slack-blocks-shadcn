@@ -124,6 +124,97 @@ describe("Post-real-Slack parity fixes", () => {
     expect(text).toMatch(/🧑|❤|💑/u);
   });
 
+  it("rich_text emoji with skin_tone attaches Fitzpatrick modifier", () => {
+    const { container } = render(
+      <Message
+        blocks={[
+          {
+            type: "rich_text",
+            elements: [
+              {
+                type: "rich_text_section",
+                elements: [{ type: "emoji", name: "ok_hand", skin_tone: 2 }],
+              },
+            ],
+          },
+        ] as Block[]}
+      />,
+    );
+    expect(container.textContent).toContain("👌🏻");
+  });
+
+  it("rich_text ordered list uses native <ol> with list-style-type, so numbers don't leak into textContent", () => {
+    const { container } = render(
+      <Message
+        blocks={[
+          {
+            type: "rich_text",
+            elements: [
+              {
+                type: "rich_text_list",
+                style: "ordered",
+                elements: [
+                  { type: "rich_text_section", elements: [{ type: "text", text: "one" }] },
+                  { type: "rich_text_section", elements: [{ type: "text", text: "two" }] },
+                ],
+              },
+            ],
+          },
+        ] as Block[]}
+      />,
+    );
+    const ol = container.querySelector("ol");
+    expect(ol).not.toBeNull();
+    // Slack renders list markers via the browser's ::marker — they must
+    // NOT appear in the text content.
+    expect(container.textContent).toBe("onetwo");
+    expect(container.textContent).not.toMatch(/\d\./);
+  });
+
+  it("rich_text text with combined styles renders semantic tags (b > i > s > code)", () => {
+    const { container } = render(
+      <Message
+        blocks={[
+          {
+            type: "rich_text",
+            elements: [
+              {
+                type: "rich_text_section",
+                elements: [
+                  {
+                    type: "text",
+                    text: "combo",
+                    style: { bold: true, italic: true, strike: true, code: true },
+                  },
+                ],
+              },
+            ],
+          },
+        ] as Block[]}
+      />,
+    );
+    expect(container.querySelector("code")).not.toBeNull();
+    expect(container.querySelector("code b")).not.toBeNull();
+    expect(container.querySelector("code b i")).not.toBeNull();
+    expect(container.querySelector("code b i s")).not.toBeNull();
+    expect(container.querySelector("code b i s")!.textContent).toBe("combo");
+  });
+
+  it("mrkdwn combines `:emoji::skin-tone-N:` into glyph + Fitzpatrick modifier", () => {
+    const { container } = render(
+      <Message
+        blocks={[
+          {
+            type: "section",
+            text: { type: "mrkdwn", text: ":ok_hand::skin-tone-2:" },
+          },
+        ] as Block[]}
+      />,
+    );
+    expect(container.textContent).toContain("👌🏻");
+    expect(container.textContent).not.toContain(":skin-tone-2:");
+  });
+
   it("rich_text emoji shortcode name 'thumbsup' resolves to 👍", () => {
     render(
       <Message

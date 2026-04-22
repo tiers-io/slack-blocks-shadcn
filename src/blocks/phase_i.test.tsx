@@ -78,7 +78,7 @@ describe("Phase I — TableBlock + ConfirmDialog + realignment", () => {
         '[data-block="table"] tr[data-row="body"] td',
       )!;
       expect(cell.querySelector('[data-block="rich_text"]')).toBeInTheDocument();
-      expect(screen.getByText("hot").tagName).toBe("SPAN");
+      expect(screen.getByText("hot").tagName).toBe("B");
     });
   });
 
