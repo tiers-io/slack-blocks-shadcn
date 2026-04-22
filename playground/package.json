@@ -1,0 +1,36 @@
+{
+  "name": "slack-blocks-playground",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.400.0",
+    "node-emoji": "^2.1.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-markdown": "^9.1.0",
+    "remark-gfm": "^4.0.1",
+    "slack-blocks-to-jsx": "^1.0.4",
+    "tailwind-merge": "^2.5.4",
+    "@yozora/ast": "^2.3.16",
+    "@yozora/character": "^2.3.16",
+    "@yozora/core-tokenizer": "^2.3.16",
+    "@yozora/parser": "^2.3.16"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^5.4.10"
+  }
+}

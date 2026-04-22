@@ -1,0 +1,10 @@
+node_modules
+dist
+.DS_Store
+*.log
+
+# Extracted Slack assets — scraped from app.slack.com, regenerated locally.
+# Not committed for size + IP reasons.
+public/slack/bundle.js
+public/slack/state.json
+public/slack/styles.css
