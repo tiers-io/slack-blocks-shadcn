@@ -41,6 +41,18 @@ export function renderMrkdwn(markdown: string): ReactNode {
   text = text.replace(/(?<!\*)\*(?!\*)([^*]+)\*(?!\*)/g, "**$1**");
   // Slack uses single ~ for strike — convert to ~~.
   text = text.replace(/(?<!~)~(?!~)([^~]+)~(?!~)/g, "~~$1~~");
+  // Slack is more permissive than CommonMark on _italic_: a space may
+  // sit immediately inside either delimiter (`_ hello _`). Normalize by
+  // stripping leading/trailing whitespace inside the delimiter pair so
+  // Yozora's emphasis tokenizer still picks it up.
+  text = text.replace(
+    /(^|[\s([{>])_([^_\n]*?)_(?=$|[\s)\]}!?.,;:])/g,
+    (match, lead, inner) => {
+      const trimmed = inner.trim();
+      if (!trimmed) return match;
+      return `${lead}*${trimmed}*`;
+    },
+  );
   // <url|label>  →  [label](url)  for any URL-shaped token.
   // Slack treats <X|Y> as a link whether or not X parses as a real URL
   // (e.g. docs and Block Kit Builder use `fakeLink.toUser.com`).
