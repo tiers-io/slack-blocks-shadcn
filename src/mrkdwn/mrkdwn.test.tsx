@@ -109,4 +109,18 @@ describe("renderMrkdwn (Yozora-backed)", () => {
     // Our subteam renderer emits a mention pill; just confirm no <a href="!subteam^..."> slipped through
     expect(html).not.toMatch(/href="!subteam\^/);
   });
+
+  it("formats <!date^TS^tokens|fallback> using the token template, not fallback", () => {
+    const html = renderThrough(
+      "Posted <!date^1392734382^Posted {date_short} {time_secs}^https://youtube.com|Posted 2014-02-18 6:39:42 AM PST>",
+    );
+    expect(html).toContain("Feb 18, 2014");
+    expect(html).not.toContain("2014-02-18 6:39:42 AM PST");
+  });
+
+  it("treats `_ italic _` (surrounding whitespace) as italic", () => {
+    // Slack is more permissive than CommonMark on italic delimiters.
+    const html = renderThrough("Hi _ Schrute Farms _ here");
+    expect(html).toMatch(/<em[^>]*>Schrute Farms<\/em>/);
+  });
 });

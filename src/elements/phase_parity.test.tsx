@@ -97,6 +97,53 @@ describe("Post-real-Slack parity fixes", () => {
     expect(screen.getByText(/Photo by John Google/)).toBeInTheDocument();
   });
 
+  it("rich_text emoji with compound unicode sequence renders the glyph", () => {
+    render(
+      <Message
+        blocks={[
+          {
+            type: "rich_text",
+            elements: [
+              {
+                type: "rich_text_section",
+                elements: [
+                  {
+                    type: "emoji",
+                    name: "couple_with_heart",
+                    unicode: "1f9d1-1f3fc-200d-2764-fe0f-200d-1f9d1-1f3fe",
+                  },
+                ],
+              },
+            ],
+          },
+        ] as Block[]}
+      />,
+    );
+    const text = document.body.textContent || "";
+    expect(text).not.toContain("1f9d1-1f3fc");
+    expect(text).toMatch(/🧑|❤|💑/u);
+  });
+
+  it("rich_text emoji shortcode name 'thumbsup' resolves to 👍", () => {
+    render(
+      <Message
+        blocks={[
+          {
+            type: "rich_text",
+            elements: [
+              {
+                type: "rich_text_section",
+                elements: [{ type: "emoji", name: "thumbsup" }],
+              },
+            ],
+          },
+        ] as Block[]}
+      />,
+    );
+    expect(document.body.textContent).toContain("👍");
+    expect(document.body.textContent).not.toContain(":thumbsup:");
+  });
+
   it("card still accepts body as an array (existing callers)", () => {
     render(
       <Message
