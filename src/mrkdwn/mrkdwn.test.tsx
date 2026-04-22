@@ -90,7 +90,23 @@ describe("renderMrkdwn (Yozora-backed)", () => {
     expect(renderThrough(":wave:")).toContain("👋");
   });
 
-  it("preserves newlines literally inside a paragraph (CSS whitespace-pre-wrap handles display)", () => {
-    expect(renderThrough("line 1\nline 2")).toMatch(/line 1\nline 2/);
+  it("converts single-line newlines inside a paragraph to <br> breaks", () => {
+    expect(renderThrough("line 1\nline 2")).toMatch(/line 1<br\s*\/?>line 2/);
+  });
+
+  it("resolves <url|label> link templates even when the url is not a real URL", () => {
+    const html = renderThrough("Poll by <fakeLink.toUser.com|Mark>");
+    expect(html).toMatch(/<a[^>]*href="fakeLink\.toUser\.com"[^>]*>Mark<\/a>/);
+  });
+
+  it("resolves <url> autolinks without requiring URL() validation", () => {
+    const html = renderThrough("See <fakeLink.toHotel.com>");
+    expect(html).toMatch(/<a[^>]*href="fakeLink\.toHotel\.com"/);
+  });
+
+  it("does not mangle <!subteam^X> or <!date^...> special tokens as links", () => {
+    const html = renderThrough("Ping <!subteam^SAZ94GDB8> for help");
+    // Our subteam renderer emits a mention pill; just confirm no <a href="!subteam^..."> slipped through
+    expect(html).not.toMatch(/href="!subteam\^/);
   });
 });

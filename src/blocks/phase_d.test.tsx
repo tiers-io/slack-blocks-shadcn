@@ -29,7 +29,7 @@ describe("Phase D blocks", () => {
       expect(a.getAttribute("data-variant")).toBe("default");
     });
 
-    it("renders a no-url button as disabled", () => {
+    it("renders a no-url button as an interactive styled button", () => {
       render(
         <Message
           size="default"
@@ -39,6 +39,7 @@ describe("Phase D blocks", () => {
               elements: [
                 {
                   type: "button",
+                  action_id: "approve",
                   text: { type: "plain_text", text: "Approve" },
                   style: "danger",
                 },
@@ -48,7 +49,7 @@ describe("Phase D blocks", () => {
         />,
       );
       const btn = screen.getByText("Approve").closest("button")!;
-      expect(btn).toBeDisabled();
+      expect(btn).not.toBeDisabled();
       expect(btn.className).toContain("bg-destructive");
     });
 

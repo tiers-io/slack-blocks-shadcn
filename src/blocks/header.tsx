@@ -1,3 +1,4 @@
+import { RenderTextObject } from "../composition/TextObject";
 import { sizing } from "../sizing";
 import { useSize } from "../context";
 import { cn } from "../utils/cn";
@@ -16,7 +17,7 @@ export function HeaderBlock({ block }: { block: HeaderBlockData }) {
       data-block="header"
       className={cn(sizing[size].header, "text-foreground")}
     >
-      {block.text.text}
+      <RenderTextObject text={block.text} />
     </h3>
   );
 }

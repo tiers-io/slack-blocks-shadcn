@@ -29,7 +29,8 @@ export interface CardBlockData {
   block_id?: string;
   title?: TextObject;
   subtitle?: TextObject;
-  body?: TextObject[];
+  /** Slack templates sometimes pass a single TextObject, sometimes an array. */
+  body?: TextObject | TextObject[];
   hero_image?: ImageElement;
   icon?: ImageElement;
   actions?: AnyElement[];
@@ -78,9 +79,9 @@ export function CardBlock({ block }: { block: CardBlockData }) {
           </div>
         </CardHeader>
       ) : null}
-      {block.body && block.body.length > 0 ? (
+      {block.body ? (
         <CardContent className={cn("flex flex-col gap-1", sizing[size].body)}>
-          {block.body.map((t, i) => (
+          {(Array.isArray(block.body) ? block.body : [block.body]).map((t, i) => (
             <div key={i} className="text-foreground/90">
               <RenderTextObject text={t} />
             </div>
