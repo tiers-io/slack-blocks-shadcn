@@ -15,10 +15,10 @@ describe("rich_text", () => {
     expect(
       document.querySelector('[data-rich-text="section"]'),
     ).toBeInTheDocument();
-    expect(screen.getByText("Everything green").tagName).toBe("SPAN");
-    expect(screen.getByText("Everything green").className).toMatch(
-      /font-semibold.*italic|italic.*font-semibold/,
-    );
+    const green = screen.getByText("Everything green");
+    // Semantic tags: bold wraps italic wraps text → inner = <i>
+    expect(green.tagName).toBe("I");
+    expect(green.closest("b")).not.toBeNull();
     const link = screen.getByText("view build");
     expect(link.tagName).toBe("A");
     expect(link.getAttribute("href")).toBe("https://ci.example/build/4821");
@@ -112,16 +112,13 @@ describe("rich_text", () => {
         ],
       },
     ] as Block[]);
-    const wrappers = Array.from(
-      document.querySelectorAll('[data-rich-text="list"][data-style="ordered"]'),
-    );
-    expect(wrappers).toHaveLength(3);
-    const markers = wrappers.map((w) =>
-      Array.from(w.querySelectorAll("li > span")).map((s) => s.textContent),
-    );
-    expect(markers[0]).toEqual(["1.", "2."]);
-    expect(markers[1]).toEqual(["a.", "b."]);
-    expect(markers[2]).toEqual(["i.", "ii."]);
+    const ols = Array.from(
+      document.querySelectorAll('[data-rich-text="list"][data-style="ordered"] ol'),
+    ) as HTMLOListElement[];
+    expect(ols).toHaveLength(3);
+    expect(ols[0]!.style.listStyleType).toBe("decimal");
+    expect(ols[1]!.style.listStyleType).toBe("lower-alpha");
+    expect(ols[2]!.style.listStyleType).toBe("lower-roman");
   });
 
   it("honours list offset (starts ordered counting at offset+1)", () => {
@@ -141,10 +138,12 @@ describe("rich_text", () => {
         ],
       },
     ] as Block[]);
-    const markers = Array.from(
-      document.querySelectorAll('[data-rich-text="list"] li > span'),
-    ).map((s) => s.textContent);
-    expect(markers).toEqual(["5.", "6."]);
+    const ol = document.querySelector(
+      '[data-rich-text="list"][data-style="ordered"] ol',
+    ) as HTMLOListElement | null;
+    expect(ol).not.toBeNull();
+    // Native <ol> `start` attribute drives the browser's ::marker counter.
+    expect(ol!.getAttribute("start")).toBe("5");
   });
 
   it("list `border: 1` renders a left-bar", () => {
@@ -189,7 +188,7 @@ describe("rich_text", () => {
     expect(pre.getAttribute("data-language")).toBe("python");
   });
 
-  it("text `style.underline` renders as <span class='underline'>", () => {
+  it("text `style.underline` renders as <u>", () => {
     renderBlocks([
       {
         type: "rich_text",
@@ -203,8 +202,7 @@ describe("rich_text", () => {
         ],
       },
     ] as Block[]);
-    const span = screen.getByText("underlined");
-    expect(span.className).toContain("underline");
+    expect(screen.getByText("underlined").tagName).toBe("U");
   });
 
   it("link `style.unlink` renders plain text (no <a>)", () => {
@@ -247,9 +245,9 @@ describe("rich_text", () => {
         ],
       },
     ] as Block[]);
-    expect(screen.getByText("B").className).toContain("font-semibold");
-    expect(screen.getByText("I").className).toContain("italic");
-    expect(screen.getByText("S").className).toContain("line-through");
-    expect(screen.getByText("C").className).toContain("font-mono");
+    expect(screen.getByText("B").tagName).toBe("B");
+    expect(screen.getByText("I").tagName).toBe("I");
+    expect(screen.getByText("S").tagName).toBe("S");
+    expect(screen.getByText("C").tagName).toBe("CODE");
   });
 });

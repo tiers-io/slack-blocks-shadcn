@@ -41,13 +41,22 @@ function resolveShortcode(name: string): string | undefined {
   return undefined;
 }
 
+// Slack's skin_tone is 2-6 (2 = lightest). Fitzpatrick modifier codepoints
+// are U+1F3FB..U+1F3FF, starting at skin-tone 2 ⇒ formula 0x1F3F9 + tone.
+function skinToneModifier(tone?: number): string {
+  if (tone === undefined || tone < 2 || tone > 6) return "";
+  return String.fromCodePoint(0x1f3f9 + tone);
+}
+
 export function EmojiElement({ element }: { element: RichTextEmoji }) {
   const hooks = useHooks();
   const parse = (d: { name: string }) => {
     if (element.unicode && /^[0-9a-fA-F-]+$/.test(element.unicode)) {
       return unicodeSequenceToString(element.unicode);
     }
-    return resolveShortcode(d.name) ?? `:${d.name}:`;
+    const base = resolveShortcode(d.name);
+    if (!base) return `:${d.name}:`;
+    return base + skinToneModifier(element.skin_tone);
   };
   if (hooks.emoji) {
     return (
