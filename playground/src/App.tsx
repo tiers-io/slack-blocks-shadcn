@@ -32,7 +32,7 @@ export function App() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [actionLog, setActionLog] = useState<string[]>([]);
-  const [useRealSlack, setUseRealSlack] = useState(false);
+  const [useRealSlack, setUseRealSlack] = useState(true);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const filteredFixtures = useMemo(() => {
